@@ -8,5 +8,5 @@ root.render(
     <BrowserRouter>
       <App />
     </BrowserRouter>
-    </PageContextProvider>
+  </PageContextProvider>
 );

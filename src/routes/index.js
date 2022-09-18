@@ -1,0 +1,22 @@
+import { Switch } from 'react-router-dom';
+import HomePage from '../pages/HomePage';
+import Recipes from '../pages/Recipes';
+import RecipeDetails from '../pages/RecipeDetails';
+import Signup from '../pages/Signup';
+import NotFound from '../pages/NotFound';
+import InnerPageRoute from './InnerPageRoute';
+import MasterPageRoute from './MasterPageRoute';
+
+const Routers = () => {
+    return (
+        <Switch>
+            <MasterPageRoute path='/' exact component={HomePage}/>
+            <InnerPageRoute path='/recipes' exact component={Recipes} />
+            <InnerPageRoute path='/recipes/:id' component={RecipeDetails} />
+            <InnerPageRoute path='/singup' component={Signup} />
+            <InnerPageRoute path="/*" component={NotFound} />
+        </Switch>
+    )
+};
+
+export default Routers;

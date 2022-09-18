@@ -32,7 +32,7 @@ const Header = () => {
             
                 <div className="row">
                   <div className="col-lg-3 col-md-12 padding-left-30px">
-                    <a id="logo" href="index-2.html" className="d-inline-block margin-tb-10px"><img src={process.env.PUBLIC_URL + '/img/logo-1.png'} alt="" /></a>
+                    <Link to="/" id="logo" href="index-2.html" className="d-inline-block margin-tb-10px"><img src={process.env.PUBLIC_URL + '/img/logo-1.png'} alt="" /></Link>
                     <a className="mobile-toggle padding-13px background-main-color" href="#" onClick={toggleNavigation}><i className="fas fa-bars"></i></a>
                   </div>
                   <div className="col-lg-7 col-md-12 position-inherit">

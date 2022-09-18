@@ -2,7 +2,7 @@ import react, { Fragment } from "react";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
 
-const MaterPageLayout = (props) => {
+const MasterPageLayout = (props) => {
     return (
         <Fragment>
             <div className="banner padding-tb-20px background-overlay" style={{backgroundImage: `url(/img/banner_1.jpg)`}}>
@@ -24,4 +24,4 @@ const MaterPageLayout = (props) => {
     )
 }
 
-export default MaterPageLayout;
+export default MasterPageLayout;
