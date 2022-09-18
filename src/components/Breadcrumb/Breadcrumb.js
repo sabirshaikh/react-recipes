@@ -4,7 +4,6 @@ const Breadcrumb = () => {
 
     const location = useLocation();
     const [currentPath, setCurrentPath] = useState();
-    console.log("location:", location)
     useEffect(() => {
         setCurrentPath(location.pathname);
     }, [location]);

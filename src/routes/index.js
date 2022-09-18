@@ -6,6 +6,7 @@ import Signup from '../pages/Signup';
 import NotFound from '../pages/NotFound';
 import InnerPageRoute from './InnerPageRoute';
 import MasterPageRoute from './MasterPageRoute';
+import AddRecipe from '../pages/AddRecipe';
 
 const Routers = () => {
     return (
@@ -14,6 +15,7 @@ const Routers = () => {
             <InnerPageRoute path='/recipes' exact component={Recipes} />
             <InnerPageRoute path='/recipes/:id' component={RecipeDetails} />
             <InnerPageRoute path='/singup' component={Signup} />
+            <InnerPageRoute path="/addrecipe" component={AddRecipe} isProtected/>
             <InnerPageRoute path="/*" component={NotFound} />
         </Switch>
     )

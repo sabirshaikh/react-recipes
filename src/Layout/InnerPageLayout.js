@@ -8,15 +8,12 @@ const InnerPageLayout = (props) => {
     const ctx = useContext(PageContext);
     const {title} = ctx;
     const {headerClass} = ctx;
-    useEffect(() => {
-        console.log("change pageTitle:", title);
-        // setPageTitle(title);
-    }, [title])
+   
     return (
         <Fragment>
             <Header/>
             <div id="page-title" className="padding-tb-30px gradient-white">
-                <div className={`container ${ctx.headerClass}`}>
+                <div className={`container ${headerClass}`}>
                     <Breadcrumb/>
                     <h1 className="font-weight-300">{title}</h1>
                 </div>

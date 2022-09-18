@@ -1,8 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import MainNavigation from "../MainNavigation/MainNavigation";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
+import PageContext from "../../Store";
+
 const Header = () => {
     const [showNavigation, setShowNavigation] = useState(true);
+    const ctx = useContext(PageContext);
+    const {isAuthenticated} = ctx;
+
     const toggleNavigation = (event) => {    
         event.preventDefault();
         setShowNavigation(prevState => prevState = !showNavigation);
@@ -14,6 +19,11 @@ const Header = () => {
         } else {
             setShowNavigation(true);
         }
+    }
+
+    const logoutHandler = (event) => {
+        event.preventDefault();
+        ctx.logout();
     }
 
     useEffect(() => {
@@ -38,8 +48,9 @@ const Header = () => {
                             </div>
                             <div className="col-lg-2 col-md-12">
                                 <hr className="margin-bottom-0px d-block d-sm-none" />
-                                <Link to="/singup" className="text-white ba-2 box-shadow float-right padding-lr-23px padding-tb-23px text-extra-large"><i className="fas fa-plus"></i></Link>
-                                <Link to="/singup" className="text-white ba-1 box-shadow float-right padding-lr-23px padding-tb-23px text-extra-large"><i className="far fa-user"></i></Link>
+                                {isAuthenticated && <NavLink activeClassName="active" to="/addrecipe" className="text-white ba-2 box-shadow float-right padding-lr-23px padding-tb-23px text-extra-large"><i className="fas fa-plus"></i></NavLink>}
+                                {!isAuthenticated && <NavLink activeClassName="active" to="/singup" className="text-white ba-1 box-shadow float-right padding-lr-23px padding-tb-23px text-extra-large"><i className="far fa-user"></i></NavLink>}
+                                {isAuthenticated && <NavLink onClick={logoutHandler} activeClassName="active" to="/singup" className="text-white ba-1 box-shadow float-right padding-lr-23px padding-tb-23px text-extra-large"><i class="fas fa-sign-out-alt"></i></NavLink>}
                             </div>
                         </div>
 
