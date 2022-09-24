@@ -6,6 +6,7 @@ const Recipes = () => {
     const ctx = useContext(PageContext);
     useEffect(() => {
         ctx.headerAlignment('text-left');
+        ctx.setTitle('Recipes')
     }, [])
     return (
         <Fragment>
@@ -85,7 +86,7 @@ const Recipes = () => {
                                         <li></li>
                                     </ul>
                                 </div>
-                                <h3><Link to={`recipe`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">Slow Cooker Loaded Potato Soup</Link></h3>
+                                <h3><Link to={`/recipes/${'farid'}`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">Slow Cooker Loaded Potato Soup</Link></h3>
                                 <hr />
                                 <div className="row no-gutters">
                                     <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>

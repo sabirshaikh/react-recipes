@@ -52,7 +52,7 @@ const Header = () => {
                     <Link to="/singup" className="text-white ba-1 box-shadow float-right padding-lr-23px padding-tb-23px text-extra-large"><i className="far fa-user"></i></Link> */}
                     {isAuthenticated && <NavLink activeClassName="active" to="/addrecipe" className="text-white ba-2 box-shadow float-right padding-lr-23px padding-tb-23px text-extra-large"><i className="fas fa-plus"></i></NavLink>}
                     {!isAuthenticated && <NavLink activeClassName="active" to="/singup" className="text-white ba-1 box-shadow float-right padding-lr-23px padding-tb-23px text-extra-large"><i className="far fa-user "></i></NavLink>}
-                    {isAuthenticated && <NavLink onClick={logoutHandler} activeClassName="active" to="/singup" className="text-white ba-1 box-shadow float-right padding-lr-23px padding-tb-23px text-extra-large"><i class="fas fa-sign-out-alt"></i></NavLink>}
+                    {isAuthenticated && <NavLink onClick={logoutHandler} activeClassName="active" to="/singup" className="text-white ba-1 box-shadow float-right padding-lr-23px padding-tb-23px text-extra-large"><i className="fas fa-sign-out-alt"></i></NavLink>}
                   </div>
                 </div>
 
