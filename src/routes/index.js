@@ -13,7 +13,8 @@ const Routers = () => {
         <Switch>
             <MasterPageRoute path='/' exact component={HomePage}/>
             <InnerPageRoute path='/recipes' exact component={Recipes} />
-            <InnerPageRoute path='/recipes/:id' component={RecipeDetails} />
+            <InnerPageRoute path='/recipes/:id' component={Recipes} />
+            <InnerPageRoute path='/recipeDetails/:id' component={RecipeDetails} />
             <InnerPageRoute path='/singup' component={Signup} />
             <InnerPageRoute path="/addrecipe" component={AddRecipe} isProtected/>
             <InnerPageRoute path="/*" component={NotFound} />

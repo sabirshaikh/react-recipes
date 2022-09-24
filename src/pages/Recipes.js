@@ -1,13 +1,37 @@
 import { Fragment } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import PageContext from "../Store";
+import RecipeCard1 from "../components/RecipeCard/RecipeCard1";
 const Recipes = () => {
+
+    const param = useParams();
+    console.log("recipe id:", param.id);
     const ctx = useContext(PageContext);
     useEffect(() => {
         ctx.headerAlignment('text-left');
         ctx.setTitle('Recipes')
     }, [])
+
+
+    if (param.id) {
+        return (
+            <center>
+                <p>Searching {param.id} recipes...</p>
+            </center>
+        )
+    }
+    const RecipeBlock = () => {
+        var data = [];
+        for(let i=0; i <= 10; i++) {
+            data.push(
+            <div  key={i} className="col-lg-6 margin-bottom-30px">
+              <RecipeCard1 recipeName={`recipe${i}`} rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} />
+            </div>)
+        }
+        return data;
+    }
+
     return (
         <Fragment>
             <div className="container">
@@ -45,267 +69,7 @@ const Recipes = () => {
             <div className="container margin-bottom-100px">
 
                 <div className="row">
-                    <div className="col-lg-6 margin-bottom-30px">
-                        <div className="background-white thum-hover box-shadow hvr-float full-width">
-                            <div className="float-md-left margin-right-30px thum-xs">
-                                <img className="width-250px" src="/img/recipes-1.jpg" alt="" />
-                            </div>
-                            <div className="padding-25px">
-                                <div className="rating">
-                                    <ul>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li></li>
-                                    </ul>
-                                </div>
-                                <h3><Link to={`/recipes/${'sabir'}`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">Slow Cooker Loaded Potato Soup</Link></h3>
-                                <hr />
-                                <div className="row no-gutters">
-                                    <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
-                                    <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> 6-8 servings</a></div>
-                                </div>
-                            </div>
-                            <div className="clearfix"></div>
-                        </div>
-                    </div>
-                    
-                    <div className="col-lg-6 margin-bottom-30px">
-                        <div className="background-white thum-hover box-shadow hvr-float full-width">
-                            <div className="float-md-left margin-right-30px thum-xs">
-                                <img className="width-250px" src="/img/recipes-2.jpg" alt="" />
-                            </div>
-                            <div className="padding-25px">
-                                <div className="rating">
-                                    <ul>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li></li>
-                                    </ul>
-                                </div>
-                                <h3><Link to={`/recipes/${'farid'}`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">Slow Cooker Loaded Potato Soup</Link></h3>
-                                <hr />
-                                <div className="row no-gutters">
-                                    <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
-                                    <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> 6-8 servings</a></div>
-                                </div>
-                            </div>
-                            <div className="clearfix"></div>
-                        </div>
-                    </div>
-                    
-                    <div className="col-lg-6 margin-bottom-30px">
-                        <div className="background-white thum-hover box-shadow hvr-float full-width">
-                            <div className="float-md-left margin-right-30px thum-xs">
-                                <img className="width-250px" src="/img/recipes-3.jpg" alt="" />
-                            </div>
-                            <div className="padding-25px">
-                                <div className="rating">
-                                    <ul>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li></li>
-                                    </ul>
-                                </div>
-                                <h3><Link to={`recipe`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">Slow Cooker Loaded Potato Soup</Link></h3>
-                                <hr />
-                                <div className="row no-gutters">
-                                    <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
-                                    <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> 6-8 servings</a></div>
-                                </div>
-                            </div>
-                            <div className="clearfix"></div>
-                        </div>
-                    </div>
-                    
-                    <div className="col-lg-6 margin-bottom-30px">
-                        <div className="background-white thum-hover box-shadow hvr-float full-width">
-                            <div className="float-md-left margin-right-30px thum-xs">
-                                <img className="width-250px" src="/img/recipes-4.jpg" alt="" />
-                            </div>
-                            <div className="padding-25px">
-                                <div className="rating">
-                                    <ul>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li></li>
-                                    </ul>
-                                </div>
-                                <h3><Link to={`recipe`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">Slow Cooker Loaded Potato Soup</Link></h3>
-                                <hr />
-                                <div className="row no-gutters">
-                                    <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
-                                    <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> 6-8 servings</a></div>
-                                </div>
-                            </div>
-                            <div className="clearfix"></div>
-                        </div>
-                    </div>
-                    
-                    <div className="col-lg-6 margin-bottom-30px">
-                        <div className="background-white thum-hover box-shadow hvr-float full-width">
-                            <div className="float-md-left margin-right-30px thum-xs">
-                                <img className="width-250px" src="/img/recipes-5.jpg" alt="" />
-                            </div>
-                            <div className="padding-25px">
-                                <div className="rating">
-                                    <ul>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li></li>
-                                    </ul>
-                                </div>
-                                <h3><Link to={`recipe`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">Slow Cooker Loaded Potato Soup</Link></h3>
-                                <hr />
-                                <div className="row no-gutters">
-                                    <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
-                                    <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> 6-8 servings</a></div>
-                                </div>
-                            </div>
-                            <div className="clearfix"></div>
-                        </div>
-                    </div>
-                    
-                    <div className="col-lg-6 margin-bottom-30px">
-                        <div className="background-white thum-hover box-shadow hvr-float full-width">
-                            <div className="float-md-left margin-right-30px thum-xs">
-                                <img className="width-250px" src="/img/recipes-6.jpg" alt="" />
-                            </div>
-                            <div className="padding-25px">
-                                <div className="rating">
-                                    <ul>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li></li>
-                                    </ul>
-                                </div>
-                                <h3><Link to={`recipe`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">Slow Cooker Loaded Potato Soup</Link></h3>
-                                <hr />
-                                <div className="row no-gutters">
-                                    <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
-                                    <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> 6-8 servings</a></div>
-                                </div>
-                            </div>
-                            <div className="clearfix"></div>
-                        </div>
-                    </div>
-                    
-                    <div className="col-lg-6 margin-bottom-30px">
-                        <div className="background-white thum-hover box-shadow hvr-float full-width">
-                            <div className="float-md-left margin-right-30px thum-xs">
-                                <img className="width-250px" src="/img/recipes-1.jpg" alt="" />
-                            </div>
-                            <div className="padding-25px">
-                                <div className="rating">
-                                    <ul>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li></li>
-                                    </ul>
-                                </div>
-                                <h3><Link to={`recipe`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">Slow Cooker Loaded Potato Soup</Link></h3>
-                                <hr />
-                                <div className="row no-gutters">
-                                    <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
-                                    <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> 6-8 servings</a></div>
-                                </div>
-                            </div>
-                            <div className="clearfix"></div>
-                        </div>
-                    </div>
-                    
-                    <div className="col-lg-6 margin-bottom-30px">
-                        <div className="background-white thum-hover box-shadow hvr-float full-width">
-                            <div className="float-md-left margin-right-30px thum-xs">
-                                <img className="width-250px" src="/img/recipes-1.jpg" alt="" />
-                            </div>
-                            <div className="padding-25px">
-                                <div className="rating">
-                                    <ul>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li></li>
-                                    </ul>
-                                </div>
-                                <h3><Link to={`recipe`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">Slow Cooker Loaded Potato Soup</Link></h3>
-                                <hr />
-                                <div className="row no-gutters">
-                                    <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
-                                    <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> 6-8 servings</a></div>
-                                </div>
-                            </div>
-                            <div className="clearfix"></div>
-                        </div>
-                    </div>
-                    
-                    <div className="col-lg-6 margin-bottom-30px">
-                        <div className="background-white thum-hover box-shadow hvr-float full-width">
-                            <div className="float-md-left margin-right-30px thum-xs">
-                                <img className="width-250px" src="/img/recipes-2.jpg" alt="" />
-                            </div>
-                            <div className="padding-25px">
-                                <div className="rating">
-                                    <ul>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li></li>
-                                    </ul>
-                                </div>
-                                <h3><Link to={`recipe`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">Slow Cooker Loaded Potato Soup</Link></h3>
-                                <hr />
-                                <div className="row no-gutters">
-                                    <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
-                                    <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> 6-8 servings</a></div>
-                                </div>
-                            </div>
-                            <div className="clearfix"></div>
-                        </div>
-                    </div>
-                    
-                    <div className="col-lg-6 margin-bottom-30px">
-                        <div className="background-white thum-hover box-shadow hvr-float full-width">
-                            <div className="float-md-left margin-right-30px thum-xs">
-                                <img className="width-250px" src="/img/recipes-3.jpg" alt="" />
-                            </div>
-                            <div className="padding-25px">
-                                <div className="rating">
-                                    <ul>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li className="active"></li>
-                                        <li></li>
-                                    </ul>
-                                </div>
-                                <h3><Link to={`recipe`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">Slow Cooker Loaded Potato Soup</Link></h3>
-                                <hr />
-                                <div className="row no-gutters">
-                                    <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
-                                    <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> 6-8 servings</a></div>
-                                </div>
-                            </div>
-                            <div className="clearfix"></div>
-                        </div>
-                    </div>
-                    
-
+                    <RecipeBlock />
                 </div>
 
                 <div className="text-center">
