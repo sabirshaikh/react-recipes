@@ -14,19 +14,26 @@ const PageContext = createContext({
 });
 
 export const PageContextProvider = (props) => {
-
-    const initState = browserStorage.get('userData');
-
-    const [pageTitle, setPageTitle] = useState(initState.pageTitle || 'Home');
-    const [headerLayout, setHeaderLayout] = useState(initState.headerLayout || 'text-left')
-    const [loggedIn, setLoggedIn] = useState(initState.loggedIn || false);
-
+    const [pageTitle, setPageTitle] = useState('Home');
+    const [headerLayout, setHeaderLayout] = useState('text-left')
+    const [loggedIn, setLoggedIn] = useState(false);
 
     const [userData, setUserData] =  usePersistState('userData', {
         pageTitle,
         headerLayout,
         loggedIn
     })
+
+    useEffect(() => {
+        const initState = browserStorage.get('userData');
+
+        if(initState) {
+            setPageTitle(initState.pageTitle);
+            setHeaderLayout(initState.headerLayout);
+            setLoggedIn(initState.loggedIn);
+        }
+
+    }, [])
 
     useEffect(() => {
         setUserData({
