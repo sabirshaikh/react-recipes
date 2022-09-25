@@ -18,8 +18,8 @@ const Recipes = () => {
         for(let i=1; i <= count; i++) {
             data.push(
             <div  key={i} className="col-lg-6 margin-bottom-30px">
-              {/* <RecipeCard1 recipeName={`recipe${i}`} rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} /> */}
-              <RecipeCard1  key={'r' + i}  recipeName={`recipe${i}`} rating={5} />
+              <RecipeCard1 recipeName={`recipe${i}`} rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} />
+              {/* <RecipeCard1  key={'r' + i}  recipeName={`recipe${i}`} rating={5} /> */}
             </div>)
         }
         setRecipes(data);

@@ -15,17 +15,17 @@ const HomePage = () => {
       var data = [];
       for(let i=0; i < 4; i++) {
           data.push(
-          <div  key={i} className="col-xl-3 col-lg-4 col-md-6 recipe-item margin-bottom-40px">
-            <RecipeCard2 recipeName={`recipe${i}`} rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} />
+          <div  key={'recipe' + i} className="col-xl-3 col-lg-4 col-md-6 recipe-item margin-bottom-40px">
+            <RecipeCard2 key={'recipeCard' + i} recipeName={`recipe${i}`} rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} />
           </div>)
       }
       return data;
   }
 
-  const Category = recipeCategory.map((data, index)=> {
+  const Category = ctx.recipeCategory.map((data, index)=> {
     return (
       <div className="col-xl-2 col-lg-3 col-md-4 col-6 sm-mb-25px" key={'cat' + index}>
-        <CategoryCard categoryName={data.name}  image={data.image}/>
+        <CategoryCard key={'catCard' + index} categoryName={data.name}  image={data.image}/>
       </div>
     )
   })

@@ -2,6 +2,14 @@ import { createContext, useEffect } from "react";
 import { useState } from "react";
 import usePersistState from '../Hooks/usePersistState';
 import browserStorage from 'store';
+const recipeCategory = [
+    {name: 'Fish', image: '/img/cat-1.jpg'},
+    {name: 'Cocktails', image: '/img/cat-2.jpg'},
+    {name: 'Eggs', image: '/img/cat-3.jpg'},
+    {name: 'Salad', image: '/img/cat-4.jpg'},
+    {name: 'Asian', image: '/img/cat-5.jpg'},
+    {name: 'Pzza', image: '/img/cat-6.jpg'}
+  ]
 
 const PageContext = createContext({
     title: '',
@@ -10,7 +18,8 @@ const PageContext = createContext({
     headerAlignment: (alignClass) => {},
     setTitle: (title) => {},
     login: () => {},
-    logout: () => {}
+    logout: () => {},
+    recipeCategory
 });
 
 export const PageContextProvider = (props) => {
@@ -66,7 +75,8 @@ export const PageContextProvider = (props) => {
         setTitle: setTitleHandler,
         headerAlignment: headerLayoutHandler,
         login: loginHandler,
-        logout: logoutHandler
+        logout: logoutHandler,
+        recipeCategory
     };
 
    

@@ -1,14 +1,23 @@
 import { Fragment, useContext, useEffect } from "react"
 import { useParams } from "react-router-dom";
 import PageContext from "../Store";
-
+import CategoryCard from "../components/RecipeCategoryCard/CategoryCard";
 const RecipeDetails = () => {
     const params = useParams();
     const ctx = useContext(PageContext);
+    
     useEffect(() => {
         ctx.headerAlignment('text-left');
         ctx.setTitle(params.id + ' | Cook Note');
     }, [])
+
+    const Category = ctx.recipeCategory.map((data, index)=> {
+        return (
+          <div className="col-6 margin-bottom-25px" key={'cat' + index}>
+            <CategoryCard key={'catCard' + index} categoryName={data.name}  image={data.image}/>
+          </div>
+        )
+      })
     return (
         <div className="container">
             <div className="row">
@@ -181,47 +190,8 @@ const RecipeDetails = () => {
                     </div>
 
                     <div className="row margin-tb-45px">
-                        <div className="col-6 margin-bottom-25px">
-                            <a href="#" className="d-block box-shadow background-main-color text-white hvr-float">
-                                <div className="thum"><img src="/img/cat-1.jpg" alt="" /></div>
-                                <h4 className="text-center padding-15px">Fish</h4>
-                            </a>
-                        </div>
-                        <div className="col-6 margin-bottom-25px">
-                            <a href="#" className="d-block box-shadow background-main-color text-white hvr-float">
-                                <div className="thum"><img src="/img/cat-2.jpg" alt="" /></div>
-                                <h4 className="text-center padding-15px">Cocktails</h4>
-                            </a>
-                        </div>
-                        <div className="col-6 margin-bottom-25px">
-                            <a href="#" className="d-block box-shadow background-main-color text-white hvr-float">
-                                <div className="thum"><img src="/img/cat-3.jpg" alt="" /></div>
-                                <h4 className="text-center padding-15px">Eggs</h4>
-                            </a>
-                        </div>
-                        <div className="col-6 margin-bottom-25px">
-                            <a href="#" className="d-block box-shadow background-main-color text-white hvr-float">
-                                <div className="thum"><img src="/img/cat-4.jpg" alt="" /></div>
-                                <h4 className="text-center padding-15px">Salads</h4>
-                            </a>
-                        </div>
+                        {Category}
                     </div>
-
-                    <div className="widget widget_categories">
-                        <div className="margin-bottom-30px">
-                            <div className="padding-30px background-white border-radius-10">
-                                <h4><i className="fab fa-instagram margin-right-10px text-main-color"></i> Instagram</h4>
-                                <hr />
-                                <div className="row">
-                                    <div className="col-6 margin-bottom-20px"><a href="#"><img className="border-radius-10" src="/img/instgram-1.jpg" alt="" /></a></div>
-                                    <div className="col-6 margin-bottom-20px"><a href="#"><img className="border-radius-10" src="/img/instgram-2.jpg" alt="" /></a></div>
-                                    <div className="col-6 margin-bottom-20px"><a href="#"><img className="border-radius-10" src="/img/instgram-3.jpg" alt="" /></a></div>
-                                    <div className="col-6 margin-bottom-20px"><a href="#"><img className="border-radius-10" src="/img/instgram-4.jpg" alt="" /></a></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
