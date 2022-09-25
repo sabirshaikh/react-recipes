@@ -1,17 +1,16 @@
-import { Fragment } from "react";
+import { Fragment, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
+import PageContext from "../Store";
 import RecipeCard2 from "../components/RecipeCard/RecipeCard2";
 import CategoryCard from "../components/RecipeCategoryCard/CategoryCard";
 const HomePage = () => {
+  const ctx = useContext(PageContext);
+  
 
-  const recipeCategory = [
-    {name: 'Fish', image: '/img/cat-1.jpg'},
-    {name: 'Cocktails', image: '/img/cat-2.jpg'},
-    {name: 'Eggs', image: '/img/cat-3.jpg'},
-    {name: 'Salad', image: '/img/cat-4.jpg'},
-    {name: 'Asian', image: '/img/cat-5.jpg'},
-    {name: 'Pzza', image: '/img/cat-6.jpg'}
-  ]
+  useEffect(()=>{
+    ctx.setTitle('Home | Cook Note')
+  }, [])
+
   const RecipeBlock = () => {
       var data = [];
       for(let i=0; i < 4; i++) {

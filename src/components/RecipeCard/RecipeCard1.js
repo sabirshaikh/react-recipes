@@ -5,7 +5,7 @@ const RecipeCard1 = (props) => {
     const RatingBlock = () => {
         let star = [];
         for(let i=0; i < rating; i++) {
-            star.push( <li className="active"></li>)
+            star.push( <li key={'s' + i} className="active"></li>)
         }
         return star;
     }

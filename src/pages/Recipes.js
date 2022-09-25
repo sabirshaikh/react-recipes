@@ -1,18 +1,29 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import PageContext from "../Store";
 import RecipeCard1 from "../components/RecipeCard/RecipeCard1";
 const Recipes = () => {
-
+    console.log("Recipe page call")
     const param = useParams();
-    console.log("recipe id:", param.id);
     const ctx = useContext(PageContext);
-    useEffect(() => {
-        ctx.headerAlignment('text-left');
-        ctx.setTitle('Recipes')
-    }, [])
+    const [count, setCount] = useState(3);
+    const [recipes, setRecipes] = useState([]);
 
+    useEffect(()=> {
+        console.log("useEffect recipes call");
+        ctx.headerAlignment('text-left');
+        ctx.setTitle('Recipes | Cook Note');
+        var data = [];
+        for(let i=1; i <= count; i++) {
+            data.push(
+            <div  key={i} className="col-lg-6 margin-bottom-30px">
+              {/* <RecipeCard1 recipeName={`recipe${i}`} rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} /> */}
+              <RecipeCard1  key={'r' + i}  recipeName={`recipe${i}`} rating={5} />
+            </div>)
+        }
+        setRecipes(data);
+    }, [count])
 
     if (param.id) {
         return (
@@ -21,15 +32,9 @@ const Recipes = () => {
             </center>
         )
     }
-    const RecipeBlock = () => {
-        var data = [];
-        for(let i=0; i <= 10; i++) {
-            data.push(
-            <div  key={i} className="col-lg-6 margin-bottom-30px">
-              <RecipeCard1 recipeName={`recipe${i}`} rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} />
-            </div>)
-        }
-        return data;
+
+    const countHandler = () => {
+        setCount(data => data + 1);
     }
 
     return (
@@ -65,15 +70,14 @@ const Recipes = () => {
                     </div>
                 </div>
             </div>
-
             <div className="container margin-bottom-100px">
 
                 <div className="row">
-                    <RecipeBlock />
+                    {recipes}
                 </div>
 
                 <div className="text-center">
-                    <a href="#" className="btn box-shadow margin-top-50px padding-tb-10px btn-sm border-2 border-radius-30 btn-inline-block width-210px background-second-color text-white">Show All Recipes</a>
+                    <button onClick={countHandler} className="btn box-shadow margin-top-50px padding-tb-10px btn-sm border-2 border-radius-30 btn-inline-block width-210px background-second-color text-white">Show All Recipes</button>
                 </div>
 
             </div>

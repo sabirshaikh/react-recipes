@@ -5,7 +5,6 @@ import PageContext from "../Store";
 import { useHistory } from "react-router-dom";
 
 const InnerPageRoute = ({component: Component, ...props}) => {
-    console.log("protected:", props.isProtected);
     const history = useHistory();
     const ctx = useContext(PageContext);
     const {isAuthenticated} = ctx;
