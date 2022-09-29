@@ -1,5 +1,6 @@
 import { createContext, useEffect } from "react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import axios from "axios";
 import usePersistState from '../Hooks/usePersistState';
 import browserStorage from 'store';
 const recipeCategory = [
@@ -19,14 +20,20 @@ const PageContext = createContext({
     setTitle: (title) => {},
     login: () => {},
     logout: () => {},
-    recipeCategory
+    recipeCategory,
+    recipes: [],
+    setRecipes: (recipes) => {},
+    showLoader: false,
+    toggleLoader: () => {}
 });
 
 export const PageContextProvider = (props) => {
     const [pageTitle, setPageTitle] = useState('Home');
     const [headerLayout, setHeaderLayout] = useState('text-left')
     const [loggedIn, setLoggedIn] = useState(false);
-
+    const [recipes, setRecipes] = useState([]);
+    const [loader, setLoader] = useState(false);
+    
     const [userData, setUserData] =  usePersistState('userData', {
         pageTitle,
         headerLayout,
@@ -36,7 +43,7 @@ export const PageContextProvider = (props) => {
     useEffect(() => {
         const initState = browserStorage.get('userData');
 
-        if(initState) {
+        if(userData) {
             setPageTitle(initState.pageTitle);
             setHeaderLayout(initState.headerLayout);
             setLoggedIn(initState.loggedIn);
@@ -68,6 +75,15 @@ export const PageContextProvider = (props) => {
         setLoggedIn(false);
     }
 
+    const setRecipesHandler = (data) => {
+        setRecipes((oldRecipes) => [...oldRecipes, ...data]);
+    }
+
+    const toggleLoader = (data) => {
+        setLoader(data);
+    }
+    
+
     const contextValue = {
         title: pageTitle,
         headerClass: headerLayout,
@@ -76,7 +92,11 @@ export const PageContextProvider = (props) => {
         headerAlignment: headerLayoutHandler,
         login: loginHandler,
         logout: logoutHandler,
-        recipeCategory
+        setRecipes: setRecipesHandler,
+        recipeCategory,
+        recipes: recipes,
+        showLoader: loader,
+        toggleLoader
     };
 
    

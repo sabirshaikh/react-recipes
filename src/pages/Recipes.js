@@ -1,29 +1,91 @@
-import { Fragment, useState } from "react";
+import { Fragment, useCallback, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import PageContext from "../Store";
 import RecipeCard1 from "../components/RecipeCard/RecipeCard1";
+import axios from "axios";
 const Recipes = () => {
     console.log("Recipe page call")
     const param = useParams();
     const ctx = useContext(PageContext);
-    const [count, setCount] = useState(3);
-    const [recipes, setRecipes] = useState([]);
+    const ctxRecipes = ctx.recipes;
+    const [from, setFrom] = useState(0);
+    const [RecipesBlock, setRecipesBlock] = useState("Loading....");
+    // const [ctxRecipes, setCtxRecipes] = useState(ctx.recipes);
 
     useEffect(()=> {
         console.log("useEffect recipes call");
         ctx.headerAlignment('text-left');
         ctx.setTitle('Recipes | Cook Note');
-        var data = [];
-        for(let i=1; i <= count; i++) {
-            data.push(
-            <div  key={i} className="col-lg-6 margin-bottom-30px">
-              <RecipeCard1 recipeName={`recipe${i}`} rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} />
-              {/* <RecipeCard1  key={'r' + i}  recipeName={`recipe${i}`} rating={5} /> */}
-            </div>)
+        
+        if(ctx.recipes.length == 0) {
+            fetchRecipes();
+            // ctx.getRecipes()
+            // console.log();
         }
-        setRecipes(data);
-    }, [count])
+        // fetchRecipes();
+    }, [])
+
+    useEffect(() => {
+        if(from > 0) {
+            fetchRecipes({
+                from,
+                to: from + 10
+            })
+        }
+    }, [from]);
+
+
+    useEffect(() => {
+        console.log("call block to render:", ctxRecipes);
+        if(ctxRecipes.length > 0) {
+            const recipeBlock = ctxRecipes.map((data, i) => {
+                return (
+                    <div  key={i} className="col-lg-6 margin-bottom-30px">
+                        <RecipeCard1 
+                            recipeName={data.recipe.label} 
+                            recipeUrl={data.recipe.uri}
+                            recipeImage={data.recipe.image}
+                            recipeServing={data.recipe.yield} 
+                            rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} 
+                        />
+                        {/* <RecipeCard1  key={'r' + i}  recipeName={`recipe${i}`} rating={5} /> */}
+                    </div>
+                )
+            })
+            setRecipesBlock(recipeBlock);
+        }
+    }, [ctxRecipes]);
+
+    const fetchRecipes = useCallback((showMore) => {
+        ctx.toggleLoader(true);
+        let apiCall = `https://api.edamam.com/search?imageSize=THUMBNAIL&q=indian&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
+        // let apiCall = `https://jsonplaceholder.typicode.com/posts`;
+        if(showMore) {
+            const {from, to} = showMore;
+            console.log('call more:', from, to);
+            apiCall = `https://api.edamam.com/search?from=${from}&to=${to}&imageSize=THUMBNAIL&q=indian&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
+        }
+
+        try {
+            axios.get(apiCall)
+            .then((res)=> {
+                if(res.status === 200) {
+                    // console.log(res.data);
+                    // setRecipes(res.data);
+                    ctx.setRecipes(res.data.hits);
+                }
+                ctx.toggleLoader(false);
+            })
+            .catch((error)=> {
+                console.log("error:", error);
+            })
+        } catch (error) {
+            console.log('error while fetching data...')
+        }
+    });
+
+    
 
     if (param.id) {
         return (
@@ -33,8 +95,9 @@ const Recipes = () => {
         )
     }
 
-    const countHandler = () => {
-        setCount(data => data + 1);
+    const showMoreRecipesHandler = () => {
+        setFrom(count => count + 1)
+               
     }
 
     return (
@@ -73,11 +136,11 @@ const Recipes = () => {
             <div className="container margin-bottom-100px">
 
                 <div className="row">
-                    {recipes}
+                    {RecipesBlock}
                 </div>
 
                 <div className="text-center">
-                    <button onClick={countHandler} className="btn box-shadow margin-top-50px padding-tb-10px btn-sm border-2 border-radius-30 btn-inline-block width-210px background-second-color text-white">Show All Recipes</button>
+                    <button onClick={showMoreRecipesHandler} className="btn box-shadow margin-top-50px padding-tb-10px btn-sm border-2 border-radius-30 btn-inline-block width-210px background-second-color text-white">Show More Recipes</button>
                 </div>
 
             </div>
