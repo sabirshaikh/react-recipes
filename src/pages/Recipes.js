@@ -20,8 +20,6 @@ const Recipes = () => {
         
         if(ctx.recipes.length == 0) {
             fetchRecipes();
-            // ctx.getRecipes()
-            // console.log();
         }
         // fetchRecipes();
     }, [])
@@ -71,7 +69,7 @@ const Recipes = () => {
             axios.get(apiCall)
             .then((res)=> {
                 if(res.status === 200) {
-                    // console.log(res.data);
+                    console.log(res.data);
                     // setRecipes(res.data);
                     ctx.setRecipes(res.data.hits);
                 }

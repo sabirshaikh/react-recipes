@@ -3,7 +3,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 const RecipeCard1 = (props) => {
     const rating = parseInt(props.rating);
-
+    const id = encodeURIComponent(props.recipeUrl);
     const RatingBlock = () => {
         let star = [];
         for(let i=0; i < rating; i++) {
@@ -15,7 +15,7 @@ const RecipeCard1 = (props) => {
     return (
         <div className="background-white thum-hover box-shadow hvr-float full-width">
             <div className="float-md-left margin-right-30px thum-xs">
-            <Link to={`/recipeDetails/${props.recipeUrl}`}>
+            <Link to={`/recipeDetails/${id}`}>
             <LazyLoadImage
                 src={props.recipeImage}
                 effect="blur"
@@ -31,7 +31,7 @@ const RecipeCard1 = (props) => {
                         <RatingBlock/>
                     </ul>
                 </div>
-                <h3> <Link to={`/recipeDetails/${props.recipeName}`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">{props.recipeName} </Link></h3>
+                <h3> <Link to={`/recipeDetails/${id}`} href="#" className="d-block text-dark text-capitalize text-medium margin-tb-15px">{props.recipeName} </Link></h3>
                 <hr />
                 <div className="row no-gutters">
                     <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>

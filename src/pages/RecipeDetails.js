@@ -1,15 +1,54 @@
-import { Fragment, useContext, useEffect } from "react"
-import { useParams } from "react-router-dom";
+import {useContext, useEffect, useCallback, useState } from "react"
+import { Link, useParams } from "react-router-dom";
 import PageContext from "../Store";
 import CategoryCard from "../components/RecipeCategoryCard/CategoryCard";
+import axios from "axios";
+
 const RecipeDetails = () => {
     const params = useParams();
     const ctx = useContext(PageContext);
-    
+    const [recipeData, setRecipeData] = useState(null);
+    // ctx.setTitle('sabir');
     useEffect(() => {
         ctx.headerAlignment('text-left');
-        ctx.setTitle(params.id + ' | Cook Note');
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if(recipeData) {
+            console.log("setRecipeData.label:", recipeData.label)
+            ctx.setTitle(recipeData.label);
+        }
+        
+    }, [recipeData]);
+
+    useEffect(() => {
+        fetchRecipeDetails(params.id);
+        // console.log("call recipe details:", params.id);
+    }, [params.id]);
+
+    const fetchRecipeDetails = useCallback((showMore) => {
+        ctx.toggleLoader(true);
+        let apiCall = `https://api.edamam.com/search?r=${params.id}&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39&imageSize=LARGE`;
+        console.log("call:", apiCall)
+        try {
+            axios.get(apiCall)
+            .then((res)=> {
+                if(res.status === 200) {
+                    console.log(res.data[0]);
+                    setRecipeData(res.data[0]);
+                    // setRecipes(res.data);
+                    // ctx.setRecipes(res.data.hits);
+                }
+                ctx.toggleLoader(false);
+            })
+            .catch((error)=> {
+                console.log("error:", error);
+            })
+        } catch (error) {
+            console.log('error while fetching data...')
+        }
+    });
+
 
     const Category = ctx.recipeCategory.map((data, index)=> {
         return (
@@ -22,10 +61,11 @@ const RecipeDetails = () => {
         <div className="container">
             <div className="row">
                 <div className="col-lg-8">
+                    {recipeData &&
                     <div className="margin-bottom-40px card border-0 box-shadow">
-                        <div className="card-img-top"><a href="#"><img src="/img/recipes-single.jpg" alt="" /></a></div>
+                        <div className="card-img-top"><a href={recipeData.url}><img src={recipeData.image} alt="" target="_blank" /></a></div>
                         <div className="padding-lr-30px padding-tb-20px">
-                            <h5 className="margin-bottom-20px margin-top-10px"><a className="text-dark" href="#">Slow Cooker Loaded Potato Soup</a></h5>
+                            <h5 className="margin-bottom-20px margin-top-10px"><a className="text-dark" href="#">{recipeData.label}</a></h5>
                             <div className="rating">
                                 <ul>
                                     <li className="active"></li>
@@ -68,7 +108,10 @@ const RecipeDetails = () => {
                             <a href="#" className="d-inline-block text-grey-3 h6 margin-bottom-0px margin-right-15px"><img src="/img/zoal-8.jpg" className="height-30px border-radius-30 margin-right-15px" alt="" /> Salim Aldos/ ery</a>
                         </div>
                     </div>
-
+                    }
+                    {
+                        !recipeData && "not found"
+                    }
 
                     <div className="margin-bottom-40px box-shadow">
                         <div className="padding-30px background-white">

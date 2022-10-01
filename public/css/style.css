@@ -27703,3 +27703,7 @@ form.dark-form {
   display: flex;
   flex-wrap: wrap;
 }
+
+.btn, a, button {
+  cursor: pointer;
+}
