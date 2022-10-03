@@ -8,36 +8,28 @@ const RecipeDetails = () => {
     const params = useParams();
     const ctx = useContext(PageContext);
     const [recipeData, setRecipeData] = useState(null);
-    // ctx.setTitle('sabir');
     useEffect(() => {
         ctx.headerAlignment('text-left');
     }, []);
 
     useEffect(() => {
         if(recipeData) {
-            console.log("setRecipeData.label:", recipeData.label)
-            ctx.setTitle(recipeData.label);
+           ctx.setTitle(recipeData.label);
         }
-        
     }, [recipeData]);
 
     useEffect(() => {
         fetchRecipeDetails(params.id);
-        // console.log("call recipe details:", params.id);
     }, [params.id]);
 
     const fetchRecipeDetails = useCallback((showMore) => {
         ctx.toggleLoader(true);
         let apiCall = `https://api.edamam.com/search?r=${params.id}&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39&imageSize=LARGE`;
-        console.log("call:", apiCall)
         try {
             axios.get(apiCall)
             .then((res)=> {
                 if(res.status === 200) {
-                    console.log(res.data[0]);
                     setRecipeData(res.data[0]);
-                    // setRecipes(res.data);
-                    // ctx.setRecipes(res.data.hits);
                 }
                 ctx.toggleLoader(false);
             })
@@ -56,14 +48,22 @@ const RecipeDetails = () => {
             <CategoryCard key={'catCard' + index} categoryName={data.name}  image={data.image}/>
           </div>
         )
-      })
+    })
+
+    let nutrientsList = [];
+    if (recipeData) {
+        Object.entries(recipeData.totalNutrients).forEach(([key, value]) => {
+            nutrientsList.push(<li key={key + 'list'}><span className="text-main-color">{value.label}</span>: {Math.ceil(value.quantity)} ({value.unit})</li>);
+        });
+    }
+
     return (
         <div className="container">
             <div className="row">
                 <div className="col-lg-8">
                     {recipeData &&
                     <div className="margin-bottom-40px card border-0 box-shadow">
-                        <div className="card-img-top"><a href={recipeData.url}><img src={recipeData.image} alt="" target="_blank" /></a></div>
+                        <div className="card-img-top"><a href={recipeData.url} target="_blank"><img src={recipeData.image} alt="" target="_blank" className="w-100" /></a></div>
                         <div className="padding-lr-30px padding-tb-20px">
                             <h5 className="margin-bottom-20px margin-top-10px"><a className="text-dark" href="#">{recipeData.label}</a></h5>
                             <div className="rating">
@@ -76,32 +76,63 @@ const RecipeDetails = () => {
                                 </ul>
                             </div>
                             <hr />
+                            <h3>Cuisine Type</h3>
+                            <ul>
+                                <li>{(recipeData.cuisineType)}</li>
+                            </ul>
+                            <hr/>
+                            <h3>Meal Type</h3>
+                            <ul>
+                                <li>{(recipeData.mealType)}</li>
+                            </ul>
+                            <hr/>
+                            <h3>Diet Type</h3>
+                            <ul>
+                                <li>{(recipeData.dietLabels)}</li>
+                            </ul>
+                            <hr/>
                             <h3>Ingredients</h3>
                             <ul>
-                                <li><strong>16 oz</strong> rotini noodles</li>
-                                <li><strong>24 oz</strong> spaghetti sauce (prego traditional)</li>
-                                <li><strong>1/2 lb</strong> ground beef</li>
-                                <li><strong>15 oz</strong> ricotta cheese</li>
-                                <li><strong>14 oz</strong> mozzarella shredded</li>
-                                <li><strong>1 can</strong> sliced olives</li>
-                                <li><strong>1 packages</strong> pepperoni slices</li>
+                                {recipeData.ingredientLines.map(data => {
+                                    return <li>{data}</li>
+                                })}
                             </ul>
                             <h3>Method</h3>
                             <ol>
-                                <li>preheat oven to 350º</li>
-                                <li>bring noodles to a boil then drain</li>
-                                <li>while noodles are cooking in a bowl mix ricotta cheese, mozzarella cheese and olives together. it will be thick</li>
-                                <li>cook ground beef then drain</li>
-                                <li>add spaghetti sauce to ground beef</li>
-                                <li>add pasta to beef and sauce mix, stir until well blended then move to 16x9 casserole dish</li>
-                                <li>spread cheese mixture all over evenly</li>
-                                <li>place pepperonis on top snd remember to partially overlap pepperonis since they shrink</li>
-                                <li>back in 350º oven for 20 minutes</li>
+                                <br/>
+                                {recipeData.ingredients.map((data, index) => {
+                                    return (
+                                        <li key={index + '-ingredient'} className="mb-3">
+                                            <ul>
+                                                <li> <b>{data.text}</b></li>
+                                                <li><span className="text-main-color">Quantity:</span> {data.quantity}</li>
+                                                <li><span className="text-main-color">Measure</span> {data.measure}</li>
+                                                <li><span className="text-main-color">Food:</span> {data.food}</li>
+                                                <li><span className="text-main-color">Weight:</span> {data.weight}</li>
+                                                <li><span className="text-main-color">foodCategory:</span> {data.foodCategory}</li>
+                                            </ul>
+                                        </li>
+                                    )
+                                })}
                             </ol>
                             <hr />
+                            <h3>Total Weight</h3>
+                            <ul>
+                                <li>{Math.ceil(recipeData.totalWeight)} (g)</li>
+                            </ul>
+                            <hr />
+                            <h3>Total Calories</h3>
+                            <ul>
+                                <li>{Math.ceil(recipeData.calories)} (Kcal)</li>
+                            </ul>
+                            <hr/>
+                            <h3>Total Nutrients</h3>
+                            <ol>
+                                {nutrientsList}
+                            </ol>
                             <div className="row no-gutters">
                                 <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
-                                <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> 6-8 servings</a></div>
+                                <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> {recipeData.yield} servings</a></div>
                             </div>
                         </div>
                         <div className="background-light-grey border-top-1 border-grey padding-lr-30px padding-tb-20px">
@@ -112,95 +143,6 @@ const RecipeDetails = () => {
                     {
                         !recipeData && "not found"
                     }
-
-                    <div className="margin-bottom-40px box-shadow">
-                        <div className="padding-30px background-white">
-                            <h3><i className="far fa-star margin-right-10px text-main-color"></i> Review &amp; Rating</h3>
-                            <hr />
-
-                            <ul className="commentlist padding-0px margin-0px list-unstyled text-grey-3">
-                                <li className="border-bottom-1 border-grey-1 margin-bottom-20px">
-                                    <img src="/img/testimonial-1.png" className="float-left margin-right-20px border-radius-60 margin-bottom-20px" alt="" />
-                                    <div className="margin-left-85px">
-                                        <a className="d-inline-block text-dark text-medium margin-right-20px" href="#">Bakhita alrawi </a>
-                                        <span className="text-extra-small">Date :  <a href="#" className="text-main-color">July 15, 2016</a></span>
-                                        <div className="rating">
-                                            <ul>
-                                                <li className="active"></li>
-                                                <li className="active"></li>
-                                                <li className="active"></li>
-                                                <li className="active"></li>
-                                                <li></li>
-                                            </ul>
-                                        </div>
-                                        <p className="margin-top-15px text-grey-2">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. </p>
-                                    </div>
-                                </li>
-                                <li className="border-bottom-1 border-grey-1 margin-bottom-20px">
-                                    <img src="/img/testimonial-2.png" className="float-left margin-right-20px border-radius-60 margin-bottom-20px" alt="" />
-                                    <div className="margin-left-85px">
-                                        <a className="d-inline-block text-dark text-medium margin-right-20px" href="#">Rabie Elkheir </a>
-                                        <span className="text-extra-small">Date :  <a href="#" className="text-main-color">July 15, 2016</a></span>
-                                        <div className="rating">
-                                            <ul>
-                                                <li className="active"></li>
-                                                <li className="active"></li>
-                                                <li></li>
-                                                <li></li>
-                                                <li></li>
-                                            </ul>
-                                        </div>
-                                        <p className="margin-top-15px text-grey-2">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. </p>
-                                    </div>
-                                </li>
-                                <li className="border-bottom-1 border-grey-1 margin-bottom-20px">
-                                    <img src="/img/testimonial-3.png" className="float-left margin-right-20px border-radius-60 margin-bottom-20px" alt="" />
-                                    <div className="margin-left-85px">
-                                        <a className="d-inline-block text-dark text-medium margin-right-20px" href="#">Adel Alsaeed </a>
-                                        <span className="text-extra-small">Date :  <a href="#" className="text-main-color">July 15, 2016</a></span>
-                                        <div className="rating">
-                                            <ul>
-                                                <li className="active"></li>
-                                                <li className="active"></li>
-                                                <li className="active"></li>
-                                                <li className="active"></li>
-                                                <li className="active"></li>
-                                            </ul>
-                                        </div>
-                                        <p className="margin-top-15px text-grey-2">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. </p>
-                                    </div>
-                                </li>
-                            </ul>
-
-                        </div>
-                    </div>
-
-                    <div className="margin-bottom-80px box-shadow">
-                        <div className="padding-30px background-white">
-                            <h3><i className="far fa-star margin-right-10px text-main-color"></i> Add Review </h3>
-                            <hr />
-                            <form>
-                                <div className="form-row">
-                                    <div className="form-group col-md-6">
-                                        <label htmlFor="inputName">Full Name</label>
-                                        <input type="text" className="form-control" id="inputName" placeholder="Name" />
-                                    </div>
-                                    <div className="form-group col-md-6">
-                                        <label htmlFor="inputEmail4">Email</label>
-                                        <input type="email" className="form-control" id="inputEmail4" placeholder="Email" />
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="exampleFormControlTextarea1">Comment :</label>
-                                    <textarea className="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Comment"></textarea>
-                                </div>
-                                <a href="#" className="btn-sm btn-lg btn-block background-main-color text-white text-center font-weight-bold text-uppercase border-radius-10 padding-10px">Add Now !</a>
-                            </form>
-                        </div>
-                    </div>
-
-
-
                 </div>
 
                 <div className="col-lg-4">

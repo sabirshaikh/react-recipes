@@ -10,8 +10,7 @@ const Recipes = () => {
     const ctx = useContext(PageContext);
     const ctxRecipes = ctx.recipes;
     const [from, setFrom] = useState(0);
-    const [RecipesBlock, setRecipesBlock] = useState("Loading....");
-    // const [ctxRecipes, setCtxRecipes] = useState(ctx.recipes);
+    const [recipesBlock, setRecipesBlock] = useState(null);
 
     useEffect(()=> {
         console.log("useEffect recipes call");
@@ -133,14 +132,15 @@ const Recipes = () => {
             </div>
             <div className="container margin-bottom-100px">
 
-                <div className="row">
-                    {RecipesBlock}
+                { recipesBlock && <div className="row">
+                    {recipesBlock}
                 </div>
-
-                <div className="text-center">
-                    <button onClick={showMoreRecipesHandler} className="btn box-shadow margin-top-50px padding-tb-10px btn-sm border-2 border-radius-30 btn-inline-block width-210px background-second-color text-white">Show More Recipes</button>
-                </div>
-
+                }
+                {   
+                   recipesBlock && <div className="text-center">
+                        <button onClick={showMoreRecipesHandler} className="btn box-shadow margin-top-50px padding-tb-10px btn-sm border-2 border-radius-30 btn-inline-block width-210px background-second-color text-white">Show More Recipes</button>
+                    </div>
+                }
             </div>
         </Fragment>
     )
