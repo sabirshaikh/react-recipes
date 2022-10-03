@@ -9,7 +9,7 @@ const recipeCategory = [
     {name: 'Eggs', image: '/img/cat-3.jpg'},
     {name: 'Salad', image: '/img/cat-4.jpg'},
     {name: 'Asian', image: '/img/cat-5.jpg'},
-    {name: 'Pzza', image: '/img/cat-6.jpg'}
+    {name: 'Pizza', image: '/img/cat-6.jpg'}
   ]
 
 const PageContext = createContext({
@@ -22,7 +22,7 @@ const PageContext = createContext({
     logout: () => {},
     recipeCategory,
     recipes: [],
-    setRecipes: (recipes) => {},
+    setRecipes: (recipes, replace = false) => {},
     showLoader: false,
     toggleLoader: () => {}
 });
@@ -75,8 +75,9 @@ export const PageContextProvider = (props) => {
         setLoggedIn(false);
     }
 
-    const setRecipesHandler = (data) => {
-        setRecipes((oldRecipes) => [...oldRecipes, ...data]);
+    const setRecipesHandler = (data, replace = false) => {
+            replace ? setRecipes((oldRecipes) => [...data]) : setRecipes((oldRecipes) => [...oldRecipes, ...data]);
+            
     }
 
     const toggleLoader = (data) => {
