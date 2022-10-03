@@ -11,6 +11,7 @@ const Recipes = () => {
     const ctxRecipes = ctx.recipes;
     const [from, setFrom] = useState(0);
     const [recipesBlock, setRecipesBlock] = useState(null);
+    const categoryName = param.id;
 
     useEffect(()=> {
         console.log("useEffect recipes call");
@@ -56,12 +57,12 @@ const Recipes = () => {
 
     const fetchRecipes = useCallback((showMore) => {
         ctx.toggleLoader(true);
-        let apiCall = `https://api.edamam.com/search?imageSize=THUMBNAIL&q=indian&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
+        let apiCall = `https://api.edamam.com/search?imageSize=THUMBNAIL&q=${categoryName ? categoryName : 'indian'}&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
         // let apiCall = `https://jsonplaceholder.typicode.com/posts`;
         if(showMore) {
             const {from, to} = showMore;
             console.log('call more:', from, to);
-            apiCall = `https://api.edamam.com/search?from=${from}&to=${to}&imageSize=THUMBNAIL&q=indian&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
+            apiCall = `https://api.edamam.com/search?from=${from}&to=${to}&imageSize=THUMBNAIL&q=${categoryName ? categoryName : 'indian'}&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
         }
 
         try {
@@ -81,16 +82,6 @@ const Recipes = () => {
             console.log('error while fetching data...')
         }
     });
-
-    
-
-    if (param.id) {
-        return (
-            <center>
-                <p>Searching {param.id} recipes...</p>
-            </center>
-        )
-    }
 
     const showMoreRecipesHandler = () => {
         setFrom(count => count + 1)
