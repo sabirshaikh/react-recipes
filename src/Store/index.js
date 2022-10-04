@@ -42,8 +42,7 @@ export const PageContextProvider = (props) => {
 
     useEffect(() => {
         const initState = browserStorage.get('userData');
-
-        if(userData) {
+        if(initState != null) {
             setPageTitle(initState.pageTitle);
             setHeaderLayout(initState.headerLayout);
             setLoggedIn(initState.loggedIn);
