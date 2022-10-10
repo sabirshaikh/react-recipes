@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import axios from "axios";
 import usePersistState from '../Hooks/usePersistState';
 import browserStorage from 'store';
+import { useLocation } from "react-router-dom";
 const recipeCategory = [
     {name: 'Fish', image: '/img/cat-1.jpg'},
     {name: 'Cocktails', image: '/img/cat-2.jpg'},
@@ -24,7 +25,9 @@ const PageContext = createContext({
     recipes: [],
     setRecipes: (recipes, replace = false) => {},
     showLoader: false,
-    toggleLoader: () => {}
+    toggleLoader: () => {},
+    setCategory: (categoryName) => {},
+    currentCategory: ''
 });
 
 export const PageContextProvider = (props) => {
@@ -33,6 +36,7 @@ export const PageContextProvider = (props) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [recipes, setRecipes] = useState([]);
     const [loader, setLoader] = useState(false);
+    const [category, setCategory] = useState('');
     
     const [userData, setUserData] =  usePersistState('userData', {
         pageTitle,
@@ -40,14 +44,14 @@ export const PageContextProvider = (props) => {
         loggedIn
     })
 
+    const initState = browserStorage.get('userData');
     useEffect(() => {
-        const initState = browserStorage.get('userData');
+        console.log("set localstoreage:", initState)
         if(initState != null) {
             setPageTitle(initState.pageTitle);
             setHeaderLayout(initState.headerLayout);
             setLoggedIn(initState.loggedIn);
         }
-
     }, [])
 
     useEffect(() => {
@@ -57,6 +61,9 @@ export const PageContextProvider = (props) => {
             loggedIn
         })
     }, [loggedIn, pageTitle, headerLayout]);
+
+   
+
     
     const setTitleHandler = (title) => {
         setPageTitle(title);
@@ -74,9 +81,12 @@ export const PageContextProvider = (props) => {
         setLoggedIn(false);
     }
 
+    const categoryHandler = (data) => {
+        setCategory(data);
+    }
+
     const setRecipesHandler = (data, replace = false) => {
             replace ? setRecipes((oldRecipes) => [...data]) : setRecipes((oldRecipes) => [...oldRecipes, ...data]);
-            
     }
 
     const toggleLoader = (data) => {
@@ -96,7 +106,9 @@ export const PageContextProvider = (props) => {
         recipeCategory,
         recipes: recipes,
         showLoader: loader,
-        toggleLoader
+        toggleLoader,
+        currentCategory: category,
+        setCategory: categoryHandler
     };
 
    

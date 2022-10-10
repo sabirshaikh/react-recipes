@@ -3,6 +3,8 @@ import { Helmet } from 'react-helmet';
 import PageContext from './Store';
 import { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import Loading from "react-fullscreen-loading";
+import React from "react";
+import { useLocation } from "react-router-dom";
 
 function App() {
   const ctx = useContext(PageContext);
@@ -10,10 +12,15 @@ function App() {
   const ref = useRef(null);
   const [pageTitle, setPagetitle] = useState(ctx.title);
   const barColor= "Yellow";
-
+  const location = useLocation();
   useEffect(()=> {
     console.log("showLoader:", showLoader)
   }, [showLoader])
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userData"))
+    user.loggedIn ? ctx.login() : ctx.logout()
+  }, [location])
 
   return (
     <Fragment>
@@ -21,7 +28,9 @@ function App() {
       <Helmet>
         <title>{pageTitle}</title>
       </Helmet>
-      <Routers />
+      <React.StrictMode>
+        <Routers />
+      </React.StrictMode>
     </Fragment>
   );
 }

@@ -1,28 +1,20 @@
 import { Fragment, useCallback, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import PageContext from "../Store";
 import RecipeCard1 from "../components/RecipeCard/RecipeCard1";
 import axios from "axios";
 const Recipes = () => {
     console.log("Recipe page call")
-    const param = useParams();
     const ctx = useContext(PageContext);
     const ctxRecipes = ctx.recipes;
     const [from, setFrom] = useState(0);
     const [recipesBlock, setRecipesBlock] = useState(null);
-    const [category, setcategory] = useState(param.id ? param.id : 'indian');
-    
+
     useEffect(()=> {
-        console.log("useEffect recipes call:", ctx.recipes.length, category, (ctx.recipes.length == 0 && category != null));
+        console.log("useEffect recipes");
         ctx.headerAlignment('text-left');
         ctx.setTitle('Recipes | Cook Note');
-        
-        if(param.id) {
-            fetchRecipes(null, true);
-            return;
-        }
-
         if(ctx.recipes.length == 0) {
             fetchRecipes();
         }
@@ -60,12 +52,12 @@ const Recipes = () => {
 
     const fetchRecipes = useCallback((showMore, replace = false) => {
         ctx.toggleLoader(true);
-        let apiCall = `https://api.edamam.com/search?imageSize=THUMBNAIL&q=${category ? category : 'indian'}&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
+        let apiCall = `https://api.edamam.com/search?imageSize=THUMBNAIL&q='indian'&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
         // let apiCall = `https://jsonplaceholder.typicode.com/posts`;
         if(showMore) {
             const {from, to} = showMore;
             console.log('call more:', from, to);
-            apiCall = `https://api.edamam.com/search?from=${from}&to=${to}&imageSize=THUMBNAIL&q=${category ? category : 'indian'}&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
+            apiCall = `https://api.edamam.com/search?from=${from}&to=${to}&imageSize=THUMBNAIL&q='indian'&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
         }
 
         try {
@@ -73,15 +65,16 @@ const Recipes = () => {
             .then((res)=> {
                 if(res.status === 200) {
                     console.log(res.data);
-                    // setRecipes(res.data);
                     ctx.setRecipes(res.data.hits, replace);
                 }
                 ctx.toggleLoader(false);
             })
             .catch((error)=> {
+                ctx.toggleLoader(false);
                 console.log("error:", error);
             })
         } catch (error) {
+            ctx.toggleLoader(false);
             console.log('error while fetching data...')
         }
     });
@@ -126,12 +119,10 @@ const Recipes = () => {
             </div>
             <div className="container margin-bottom-100px">
 
-                { recipesBlock && <div className="row">
+                { !recipesBlock ? <p>Not Found, Please try again <Link to="/recipes" className="text-main-color">recipes</Link></p> : <div className="row">
                     {recipesBlock}
                 </div>
                 }
-
-                { !recipesBlock && <p>The <span className="text-main-color font-weight-bold">{category}</span> category Recipes Not found!</p>}
                 {   
                    recipesBlock && <div className="text-center">
                         <button onClick={showMoreRecipesHandler} className="btn box-shadow margin-top-50px padding-tb-10px btn-sm border-2 border-radius-30 btn-inline-block width-210px background-second-color text-white">Show More Recipes</button>
