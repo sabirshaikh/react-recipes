@@ -15,7 +15,7 @@ const InnerPageLayout = (props) => {
             <div id="page-title" className="padding-tb-30px gradient-white">
                 <div className={`container ${headerClass}`}>
                     <Breadcrumb/>
-                    <h1 className="font-weight-300">{title}</h1>
+                    <h1 className="font-weight-300 text-capitalize">{title}</h1>
                 </div>
             </div>
             {props.children}

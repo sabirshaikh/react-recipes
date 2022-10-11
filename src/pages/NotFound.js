@@ -1,5 +1,14 @@
+import { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import PageContext from "../Store";
 const NotFound = () => {
+    const ctx = useContext(PageContext);
+   
+
+    useEffect(() => {
+        ctx.headerAlignment('d-none');
+        ctx.setTitle('Not found');
+    }, [])
     return (
         <div className="container margin-bottom-100px">
             <div className="text-center">

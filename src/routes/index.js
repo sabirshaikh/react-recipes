@@ -7,11 +7,12 @@ import NotFound from '../pages/NotFound';
 import InnerPageRoute from './InnerPageRoute';
 import MasterPageRoute from './MasterPageRoute';
 import AddRecipe from '../pages/AddRecipe';
-
+import Category from '../pages/Category';
 const Routers = () => {
     return (
         <Switch>
             <MasterPageRoute path='/' exact component={HomePage}/>
+            <InnerPageRoute path='/category/:id' component={Category} />
             <InnerPageRoute path='/recipes' exact component={Recipes} />
             <InnerPageRoute path='/recipes/:id' component={Recipes} />
             <InnerPageRoute path='/recipeDetails/:id' component={RecipeDetails} />
