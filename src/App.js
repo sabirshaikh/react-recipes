@@ -15,8 +15,8 @@ function App() {
   }, [showLoader])
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userData"))
-    user.loggedIn ? ctx.login() : ctx.logout()
+    const user = JSON.parse(localStorage.getItem("userData"));
+    user.loggedIn ? ctx.login() : ctx.logout();
   }, [location])
 
   return (

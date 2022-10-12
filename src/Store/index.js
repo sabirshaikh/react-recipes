@@ -25,46 +25,34 @@ const PageContext = createContext({
     recipes: [],
     setRecipes: (recipes, replace = false) => {},
     showLoader: false,
-    toggleLoader: () => {},
-    setCategory: (categoryName) => {},
-    currentCategory: ''
+    toggleLoader: () => {}
 });
 
 export const PageContextProvider = (props) => {
-    const [pageTitle, setPageTitle] = useState('Home');
-    const [headerLayout, setHeaderLayout] = useState('text-left')
-    const [loggedIn, setLoggedIn] = useState(false);
+
+    const storeData = JSON.parse(localStorage.getItem('userData')) || {
+        loggedIn: false,
+        pageTitle: 'Home',
+        headerLayout: 'text-left'
+    }
+    console.log("storeData:", storeData)
+    localStorage.setItem('userData', JSON.stringify(storeData));
+
+    const [pageTitle, setPageTitle] = useState(storeData.pageTitle);
+    const [headerLayout, setHeaderLayout] = useState(storeData.headerLayout)
+    const [loggedIn, setLoggedIn] = useState(storeData.loggedIn);
+    
     const [recipes, setRecipes] = useState([]);
     const [loader, setLoader] = useState(false);
-    const [category, setCategory] = useState('');
-    
-    const [userData, setUserData] =  usePersistState('userData', {
-        pageTitle,
-        headerLayout,
-        loggedIn
-    })
-
-    const initState = browserStorage.get('userData');
-    useEffect(() => {
-        console.log("set localstoreage:", initState)
-        if(initState != null) {
-            setPageTitle(initState.pageTitle);
-            setHeaderLayout(initState.headerLayout);
-            setLoggedIn(initState.loggedIn);
-        }
-    }, [])
 
     useEffect(() => {
-        setUserData({
+        localStorage.setItem('userData', JSON.stringify({
+            loggedIn,
             pageTitle,
-            headerLayout,
-            loggedIn
-        })
+            headerLayout
+        }))
     }, [loggedIn, pageTitle, headerLayout]);
 
-   
-
-    
     const setTitleHandler = (title) => {
         setPageTitle(title);
     };
@@ -79,10 +67,6 @@ export const PageContextProvider = (props) => {
 
     const logoutHandler = () => {
         setLoggedIn(false);
-    }
-
-    const categoryHandler = (data) => {
-        setCategory(data);
     }
 
     const setRecipesHandler = (data, replace = false) => {
@@ -106,9 +90,7 @@ export const PageContextProvider = (props) => {
         recipeCategory,
         recipes: recipes,
         showLoader: loader,
-        toggleLoader,
-        currentCategory: category,
-        setCategory: categoryHandler
+        toggleLoader
     };
 
    
