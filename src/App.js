@@ -10,12 +10,13 @@ function App() {
   const {showLoader} = ctx;
   const [pageTitle, setPagetitle] = useState(ctx.title);
   const location = useLocation();
+
   useEffect(()=> {
     console.log("showLoader:", showLoader)
   }, [showLoader])
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userData"));
+    const user = JSON.parse(localStorage.getItem("userData")) || '';  
     user.loggedIn ? ctx.login() : ctx.logout();
   }, [location])
 

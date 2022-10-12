@@ -29,27 +29,40 @@ const PageContext = createContext({
 });
 
 export const PageContextProvider = (props) => {
-
-    const storeData = JSON.parse(localStorage.getItem('userData')) || {
-        loggedIn: false,
-        pageTitle: 'Home',
-        headerLayout: 'text-left'
-    }
-    console.log("storeData:", storeData)
-    localStorage.setItem('userData', JSON.stringify(storeData));
-
-    const [pageTitle, setPageTitle] = useState(storeData.pageTitle);
-    const [headerLayout, setHeaderLayout] = useState(storeData.headerLayout)
-    const [loggedIn, setLoggedIn] = useState(storeData.loggedIn);
     
+    const storeData = JSON.parse(localStorage.getItem('userData')) || '';
+    const [pageTitle, setPageTitle] = useState(storeData.pageTitle || 'Home');
+    const [headerLayout, setHeaderLayout] = useState(storeData.headerLayout || 'text-left')
+    const [loggedIn, setLoggedIn] = useState(storeData.loggedIn || false);
     const [recipes, setRecipes] = useState([]);
     const [loader, setLoader] = useState(false);
+
+    const onStorageUpdate = (e) => {
+        if (e.key === 'userData') {
+          const oldValue = JSON.parse(e.oldValue);
+          const newValue = JSON.parse(e.newValue);
+          console.log("strage old value:", oldValue.loggedIn)
+          console.log("strage new value:", newValue.loggedIn)
+          if(newValue.loggedIn) {
+            loginHandler();
+          } else {
+            logoutHandler();
+          }
+        }
+      };
+    
+      useEffect(() => {
+        window.addEventListener("storage", onStorageUpdate);
+        return () => {
+          window.removeEventListener("storage", onStorageUpdate);
+        };
+      }, []);
 
     useEffect(() => {
         localStorage.setItem('userData', JSON.stringify({
             loggedIn,
-            pageTitle,
-            headerLayout
+            headerLayout,
+            pageTitle
         }))
     }, [loggedIn, pageTitle, headerLayout]);
 
@@ -63,10 +76,12 @@ export const PageContextProvider = (props) => {
 
     const loginHandler = () => {
         setLoggedIn(true);
+        console.log("loginHandler:", loggedIn);
     }
 
     const logoutHandler = () => {
         setLoggedIn(false);
+        console.log("logoutHandler:", loggedIn);
     }
 
     const setRecipesHandler = (data, replace = false) => {

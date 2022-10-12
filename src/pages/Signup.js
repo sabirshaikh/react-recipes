@@ -7,6 +7,7 @@ const Signup = () => {
 	const history = useHistory();
 	
     useEffect(() => {
+		ctx.setTitle('Sign up')
         ctx.headerAlignment('text-center');
 		if (isAuthenticated) {
 			history.push("/");
