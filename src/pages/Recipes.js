@@ -1,14 +1,14 @@
-import { Fragment, useCallback, useState } from "react";
+import { Fragment, useCallback, useState, useRef } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import PageContext from "../Store";
 import RecipeCard1 from "../components/RecipeCard/RecipeCard1";
 import axios from "axios";
-
+import InputControl from "../components/UI/InputControl";
 
 const Category = () => {
     console.log("Recipe page call")
-    // const history = useHistory();
+    const history = useHistory();
     const ctx = useContext(PageContext);
     const params = useParams();
     const ctxRecipes = ctx.recipes;
@@ -17,6 +17,7 @@ const Category = () => {
     const categoryName = params.id ? params.id : 'indian';
     const [error, setError] = useState(null);
     const {showLoader} = ctx;
+    const searchControlRef = useRef('');
 
     useEffect(()=> {
         console.log("loaded recipes:", ctx.recipes)
@@ -25,10 +26,10 @@ const Category = () => {
     },[])
 
     useEffect(()=> {
-        // if(!categoryName) {
-        //     history.replace("/404");
-        //     return
-        // } 
+        if(!categoryName) {
+            history.replace("/404");
+            return
+        } 
         fetchRecipes(null, true);
     }, [categoryName])
 
@@ -95,34 +96,32 @@ const Category = () => {
         setFrom(count => count + 1)
     }
 
+    const serchHandler = (e) => {
+        e.preventDefault();
+        console.log("search value:", searchControlRef.current.value)
+        history.push(`/recipes/${searchControlRef.current.value}`);
+    }
+
     return (
         <Fragment>
             <div className="container">
                 <div className="margin-bottom-60px">
                     <div className="listing-search box-shadow">
-                        <form className="row no-gutters">
-                            <div className="col-md-4">
+                        <form className="row no-gutters" onSubmit={serchHandler}>
+                            <div className="col-md-8">
                                 <div className="keywords">
-                                    <input className="listing-form first" type="text" placeholder="Keywords..." value="" />
+                                    {/* <input  /> */}
+                                    <InputControl 
+                                        ref={searchControlRef}
+                                        className="listing-form first" 
+                                        type="text" 
+                                        placeholder="Enter recipe name" 
+                                    />
                                 </div>
                             </div>
+                            
                             <div className="col-md-4">
-                                <div className="categories dropdown">
-                                    <a className="listing-form d-block text-nowrap" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">All Categories</a>
-                                    <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                        <button className="dropdown-item text-up-small" type="button">Fish</button>
-                                        <button className="dropdown-item text-up-small" type="button">Cocktails</button>
-                                        <button className="dropdown-item text-up-small" type="button">Salads</button>
-                                        <button className="dropdown-item text-up-small" type="button">Asian</button>
-                                        <button className="dropdown-item text-up-small" type="button">Fish</button>
-                                        <button className="dropdown-item text-up-small" type="button">Cocktails</button>
-                                        <button className="dropdown-item text-up-small" type="button">Salads</button>
-                                        <button className="dropdown-item text-up-small" type="button">Asian</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-4">
-                                <a className="listing-bottom background-second-color box-shadow" href="#">Search Now</a>
+                                <button type="submit" className="listing-bottom background-second-color box-shadow btn">Search Now</button>
                             </div>
                         </form>
                     </div>
