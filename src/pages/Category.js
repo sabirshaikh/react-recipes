@@ -13,9 +13,10 @@ const Category = () => {
     const params = useParams();
     const ctxRecipes = ctx.recipes;
     const [from, setFrom] = useState(0);
-    const [recipesBlock, setRecipesBlock] = useState(null);
+    const [recipesBlock, setRecipesBlock] = useState([]);
     const categoryName = params.id;
     const [error, setError] = useState(null);
+    const {showLoader} = ctx;
 
     useEffect(()=> {
         if(!categoryName) {
@@ -94,7 +95,6 @@ const Category = () => {
 
     return (
         <Fragment>
-            <Link to="/category/arab">Arab</Link>
             <div className="container">
                 <div className="margin-bottom-60px">
                     <div className="listing-search box-shadow">
@@ -128,7 +128,8 @@ const Category = () => {
             </div>
             <div className="container margin-bottom-100px">
                 {error && <p>Something went wrong!</p>}
-                { !recipesBlock ? <p>Not Found, Please try again <Link to="/recipes" className="text-main-color">recipes</Link></p> : <div className="row">
+                {showLoader && <p>Loading...</p>}
+                { recipesBlock.length == 0 && !showLoader && !error ? <p>{categoryName} Recipes Not Found, Please try again <Link to="/recipes" className="text-main-color">recipes</Link></p> : <div className="row">
                     {recipesBlock}
                 </div>
                 }

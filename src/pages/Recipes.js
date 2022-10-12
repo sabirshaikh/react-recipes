@@ -1,24 +1,36 @@
 import { Fragment, useCallback, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams, useHistory } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import PageContext from "../Store";
 import RecipeCard1 from "../components/RecipeCard/RecipeCard1";
 import axios from "axios";
-const Recipes = () => {
+
+
+const Category = () => {
     console.log("Recipe page call")
+    // const history = useHistory();
     const ctx = useContext(PageContext);
+    const params = useParams();
     const ctxRecipes = ctx.recipes;
     const [from, setFrom] = useState(0);
-    const [recipesBlock, setRecipesBlock] = useState(null);
+    const [recipesBlock, setRecipesBlock] = useState([]);
+    const categoryName = params.id ? params.id : 'indian';
+    const [error, setError] = useState(null);
+    const {showLoader} = ctx;
 
     useEffect(()=> {
-        console.log("useEffect recipes");
+        console.log("loaded recipes:", ctx.recipes)
         ctx.headerAlignment('text-left');
-        ctx.setTitle('Recipes | Cook Note');
-        if(ctx.recipes.length == 0) {
-            fetchRecipes();
-        }
-    }, [])
+        ctx.setTitle(`${categoryName} Recipes | Cook Note`);
+    },[])
+
+    useEffect(()=> {
+        // if(!categoryName) {
+        //     history.replace("/404");
+        //     return
+        // } 
+        fetchRecipes(null, true);
+    }, [categoryName])
 
     useEffect(() => {
         if(from > 0) {
@@ -31,33 +43,32 @@ const Recipes = () => {
 
     useEffect(() => {
         console.log("call block to render:", ctxRecipes);
-        if(ctxRecipes.length > 0) {
-            const recipeBlock = ctxRecipes.map((data, i) => {
-                return (
-                    <div  key={i} className="col-lg-6 margin-bottom-30px">
-                        <RecipeCard1 
-                            recipeName={data.recipe.label} 
-                            recipeUrl={data.recipe.uri}
-                            recipeImage={data.recipe.image}
-                            recipeServing={data.recipe.yield} 
-                            rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} 
-                        />
-                        {/* <RecipeCard1  key={'r' + i}  recipeName={`recipe${i}`} rating={5} /> */}
-                    </div>
-                )
-            })
-            setRecipesBlock(recipeBlock);
-        }
+        const recipeBlock = ctxRecipes.map((data, i) => {
+            return (
+                <div  key={i} className="col-lg-6 margin-bottom-30px">
+                    <RecipeCard1 
+                        recipeName={data.recipe.label} 
+                        recipeUrl={data.recipe.uri}
+                        recipeImage={data.recipe.image}
+                        recipeServing={data.recipe.yield} 
+                        rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} 
+                    />
+                    {/* <RecipeCard1  key={'r' + i}  recipeName={`recipe${i}`} rating={5} /> */}
+                </div>
+            )
+        })
+        setRecipesBlock(recipeBlock);
     }, [ctxRecipes]);
 
     const fetchRecipes = useCallback((showMore, replace = false) => {
+        console.log("call recipe")
         ctx.toggleLoader(true);
-        let apiCall = `https://api.edamam.com/search?imageSize=THUMBNAIL&q='indian'&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
+        let apiCall = `https://api.edamam.com/search?imageSize=THUMBNAIL&q='${categoryName}'&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
         // let apiCall = `https://jsonplaceholder.typicode.com/posts`;
         if(showMore) {
             const {from, to} = showMore;
             console.log('call more:', from, to);
-            apiCall = `https://api.edamam.com/search?from=${from}&to=${to}&imageSize=THUMBNAIL&q='indian'&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
+            apiCall = `https://api.edamam.com/search?from=${from}&to=${to}&imageSize=THUMBNAIL&q='${categoryName}'&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
         }
 
         try {
@@ -72,6 +83,7 @@ const Recipes = () => {
             .catch((error)=> {
                 ctx.toggleLoader(false);
                 console.log("error:", error);
+                setError(error.message);
             })
         } catch (error) {
             ctx.toggleLoader(false);
@@ -81,7 +93,6 @@ const Recipes = () => {
 
     const showMoreRecipesHandler = () => {
         setFrom(count => count + 1)
-               
     }
 
     return (
@@ -118,8 +129,9 @@ const Recipes = () => {
                 </div>
             </div>
             <div className="container margin-bottom-100px">
-
-                { !recipesBlock ? <p>Not Found, Please try again <Link to="/recipes" className="text-main-color">recipes</Link></p> : <div className="row">
+                {error && <p>Something went wrong!</p>}
+                {showLoader && <p>Loading...</p>}
+                { recipesBlock.length == 0 && !showLoader && !error ? <p>{categoryName} Recipes Not Found, Please try again <Link to="/recipes" className="text-main-color">recipes</Link></p> : <div className="row">
                     {recipesBlock}
                 </div>
                 }
@@ -133,4 +145,4 @@ const Recipes = () => {
     )
 }
 
-export default Recipes;
+export default Category;

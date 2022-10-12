@@ -5,13 +5,10 @@ import { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import Loading from "react-fullscreen-loading";
 import React from "react";
 import { useLocation } from "react-router-dom";
-
 function App() {
   const ctx = useContext(PageContext);
   const {showLoader} = ctx;
-  const ref = useRef(null);
   const [pageTitle, setPagetitle] = useState(ctx.title);
-  const barColor= "Yellow";
   const location = useLocation();
   useEffect(()=> {
     console.log("showLoader:", showLoader)
