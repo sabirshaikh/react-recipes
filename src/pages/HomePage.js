@@ -1,15 +1,10 @@
 import { Fragment, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
-import PageContext from "../Store";
+import { useSelector } from "react-redux";
 import RecipeCard2 from "../components/RecipeCard/RecipeCard2";
 import CategoryCard from "../components/RecipeCategoryCard/CategoryCard";
 const HomePage = () => {
-  const ctx = useContext(PageContext);
-  
-
-  useEffect(()=>{
-    ctx.setTitle('Home | Cook Note')
-  }, [])
+  const recipeCategory = useSelector(state => state.recipeReducer.recipeCategory)
 
   const RecipeBlock = () => {
       var data = [];
@@ -22,7 +17,7 @@ const HomePage = () => {
       return data;
   }
 
-  const Category = ctx.recipeCategory.map((data, index)=> {
+  const Category = recipeCategory.map((data, index)=> {
     return (
       <div className="col-xl-2 col-lg-3 col-md-4 col-6 sm-mb-25px" key={'cat' + index}>
         <CategoryCard key={'catCard' + index} categoryName={data.name}  image={data.image}/>

@@ -1,13 +1,13 @@
 import React, { useContext, useEffect } from "react";
 import { Route } from "react-router-dom";
 import InnerPageLayout from "../Layout/InnerPageLayout";
-import PageContext from "../Store";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 const InnerPageRoute = ({component: Component, ...props}) => {
-    const history = useHistory();
-    const ctx = useContext(PageContext);
-    const {isAuthenticated} = ctx;
+    const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
+	const history = useHistory();
+	
     const isProtected = props.isProtected;
 
     useEffect(() => {

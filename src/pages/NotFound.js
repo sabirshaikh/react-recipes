@@ -1,13 +1,13 @@
 import { useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-import PageContext from "../Store";
-const NotFound = () => {
-    const ctx = useContext(PageContext);
-   
+import {useDispatch } from "react-redux";
+import {layoutActions } from "../Store";
 
+const NotFound = () => {
+    const dispatch = useDispatch();
     useEffect(() => {
-        ctx.headerAlignment('d-none');
-        ctx.setTitle('Not found');
+        dispatch(layoutActions.setTitle('Not Found'));
+		dispatch(layoutActions.setHeaderAlignment('d-none'));
     }, [])
     return (
         <div className="container margin-bottom-100px">

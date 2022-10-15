@@ -1,20 +1,22 @@
 import {useContext, useEffect, useCallback, useState } from "react"
 import { Link, useParams } from "react-router-dom";
-import PageContext from "../Store";
 import CategoryCard from "../components/RecipeCategoryCard/CategoryCard";
 import axios from "axios";
-
+import { useSelector, useDispatch } from "react-redux";
+import {layoutActions } from "../Store";
 const RecipeDetails = () => {
+    const dispatch = useDispatch();
     const params = useParams();
-    const ctx = useContext(PageContext);
     const [recipeData, setRecipeData] = useState(null);
+    const recipeCategory = useSelector(state => state.recipeReducer.recipeCategory)
+
     useEffect(() => {
-        ctx.headerAlignment('text-left');
+		dispatch(layoutActions.setHeaderAlignment('text-left'));
     }, []);
 
     useEffect(() => {
         if(recipeData) {
-           ctx.setTitle(recipeData.label);
+           dispatch(layoutActions.setTitle(recipeData.label));
         }
     }, [recipeData]);
 
@@ -23,7 +25,7 @@ const RecipeDetails = () => {
     }, [params.id]);
 
     const fetchRecipeDetails = useCallback((showMore) => {
-        ctx.toggleLoader(true);
+        dispatch(layoutActions.showLoader(true));
         let apiCall = `https://api.edamam.com/search?r=${params.id}&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39&imageSize=LARGE`;
         try {
             axios.get(apiCall)
@@ -31,7 +33,7 @@ const RecipeDetails = () => {
                 if(res.status === 200) {
                     setRecipeData(res.data[0]);
                 }
-                ctx.toggleLoader(false);
+                dispatch(layoutActions.showLoader(false));
             })
             .catch((error)=> {
                 console.log("error:", error);
@@ -42,7 +44,7 @@ const RecipeDetails = () => {
     });
 
 
-    const Category = ctx.recipeCategory.map((data, index)=> {
+    const Category = recipeCategory.map((data, index)=> {
         return (
           <div className="col-6 margin-bottom-25px" key={'cat' + index}>
             <CategoryCard key={'catCard' + index} categoryName={data.name}  image={data.image}/>

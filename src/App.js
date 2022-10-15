@@ -1,31 +1,22 @@
-import Routers from "./routes";
-import { Helmet } from 'react-helmet';
-import PageContext from './Store';
-import { Fragment, useContext, useEffect, useRef, useState } from 'react';
-import Loading from "react-fullscreen-loading";
-import React from "react";
+import React, {Fragment, useContext} from "react";
 import { useLocation } from "react-router-dom";
+import Loading from "react-fullscreen-loading";
+import Routers from "./routes";
+import {useSelector} from 'react-redux';
+
 function App() {
-  const ctx = useContext(PageContext);
-  const {showLoader} = ctx;
-  const [pageTitle, setPagetitle] = useState(ctx.title);
-  const location = useLocation();
+  const showLoader = useSelector(state => state.layoutReducer.showLoader);
 
-  useEffect(()=> {
-    console.log("showLoader:", showLoader)
-  }, [showLoader])
+  // const location = useLocation();
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userData")) || '';  
-    user.loggedIn ? ctx.login() : ctx.logout();
-  }, [location])
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("userData")) || '';  
+  //   user.loggedIn ? ctx.login() : ctx.logout();
+  // }, [location])
 
   return (
     <Fragment>
       <Loading loading={showLoader} background="#ffffffb3" loaderColor="#b1b1b1" />
-      <Helmet>
-        <title>{pageTitle}</title>
-      </Helmet>
       <React.StrictMode>
         <Routers />
       </React.StrictMode>

@@ -1,11 +1,10 @@
 import { useContext, useEffect } from "react";
-import PageContext from "../Store";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 const ProtectedPageRoute = (props) => {
     // return props.children;
     const history = useHistory();
-    const ctx = useContext(PageContext);
-    const {isAuthenticated} = ctx;
+    const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
     
     useEffect(() => {
         if(!isAuthenticated) {

@@ -1,13 +1,12 @@
 import { useEffect, useState, useContext } from "react";
 import MainNavigation from "../MainNavigation/MainNavigation";
 import { NavLink, Link } from "react-router-dom";
-import PageContext from "../../Store";
-
+import { useSelector, useDispatch } from "react-redux";
+import { authActions } from "../../Store";
 const Header = () => {
     const [showNavigation, setShowNavigation] = useState(true);
-    const ctx = useContext(PageContext);
-    const {isAuthenticated} = ctx;
-
+    const dispatch = useDispatch();
+    const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
     const toggleNavigation = (event) => {    
         event.preventDefault();
         setShowNavigation(prevState => prevState = !showNavigation);
@@ -23,7 +22,7 @@ const Header = () => {
 
     const logoutHandler = (event) => {
         event.preventDefault();
-        ctx.logout();
+        dispatch(authActions.logout());
     }
 
     useEffect(() => {

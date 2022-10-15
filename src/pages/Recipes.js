@@ -1,7 +1,8 @@
 import { Fragment, useCallback, useState, useRef } from "react";
 import { Link, useParams, useHistory } from "react-router-dom";
-import { useEffect, useContext } from "react";
-import PageContext from "../Store";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { layoutActions, recipeActions } from "../Store";
 import RecipeCard1 from "../components/RecipeCard/RecipeCard1";
 import axios from "axios";
 import InputControl from "../components/UI/InputControl";
@@ -9,20 +10,19 @@ import InputControl from "../components/UI/InputControl";
 const Category = () => {
     console.log("Recipe page call")
     const history = useHistory();
-    const ctx = useContext(PageContext);
     const params = useParams();
-    const ctxRecipes = ctx.recipes;
     const [from, setFrom] = useState(0);
     const [recipesBlock, setRecipesBlock] = useState([]);
     const categoryName = params.id ? params.id : 'indian';
     const [error, setError] = useState(null);
-    const {showLoader} = ctx;
+    const showLoader = useSelector(state => state.layoutReducer.showLoader);
+    const recipes = useSelector(state => state.recipeReducer.recipes);
     const searchControlRef = useRef('');
+    const dispatch = useDispatch();
 
     useEffect(()=> {
-        console.log("loaded recipes:", ctx.recipes)
-        ctx.headerAlignment('text-left');
-        ctx.setTitle(`${categoryName} Recipes | Cook Note`);
+        dispatch(layoutActions.setHeaderAlignment('text-left'));
+        dispatch(layoutActions.setTitle(`${categoryName} Recipes | Cook Note`));
     },[])
 
     useEffect(()=> {
@@ -43,8 +43,8 @@ const Category = () => {
     }, [from]);
 
     useEffect(() => {
-        console.log("call block to render:", ctxRecipes);
-        const recipeBlock = ctxRecipes.map((data, i) => {
+        console.log("call block to render:", recipes);
+        const recipeBlock = recipes.map((data, i) => {
             return (
                 <div  key={i} className="col-lg-6 margin-bottom-30px">
                     <RecipeCard1 
@@ -54,18 +54,16 @@ const Category = () => {
                         recipeServing={data.recipe.yield} 
                         rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} 
                     />
-                    {/* <RecipeCard1  key={'r' + i}  recipeName={`recipe${i}`} rating={5} /> */}
                 </div>
             )
         })
         setRecipesBlock(recipeBlock);
-    }, [ctxRecipes]);
+    }, [recipes]);
 
     const fetchRecipes = useCallback((showMore, replace = false) => {
         console.log("call recipe")
-        ctx.toggleLoader(true);
+        dispatch(layoutActions.showLoader(true));
         let apiCall = `https://api.edamam.com/search?imageSize=THUMBNAIL&q='${categoryName}'&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
-        // let apiCall = `https://jsonplaceholder.typicode.com/posts`;
         if(showMore) {
             const {from, to} = showMore;
             console.log('call more:', from, to);
@@ -77,17 +75,20 @@ const Category = () => {
             .then((res)=> {
                 if(res.status === 200) {
                     console.log(res.data);
-                    ctx.setRecipes(res.data.hits, replace);
+                    dispatch(recipeActions.setRecipes({
+                        data: res.data.hits,
+                        replace
+                    }))
                 }
-                ctx.toggleLoader(false);
+                dispatch(layoutActions.showLoader(false));
             })
             .catch((error)=> {
-                ctx.toggleLoader(false);
+                dispatch(layoutActions.showLoader(false));
                 console.log("error:", error);
                 setError(error.message);
             })
         } catch (error) {
-            ctx.toggleLoader(false);
+            dispatch(layoutActions.showLoader(false));
             console.log('error while fetching data...')
         }
     });

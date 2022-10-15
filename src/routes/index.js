@@ -7,7 +7,6 @@ import NotFound from '../pages/NotFound';
 import InnerPageRoute from './InnerPageRoute';
 import MasterPageRoute from './MasterPageRoute';
 import AddRecipe from '../pages/AddRecipe';
-import Category from '../pages/Category';
 const Routers = () => {
     return (
         <Switch>

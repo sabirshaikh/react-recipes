@@ -1,14 +1,18 @@
 import { useEffect, useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
-import PageContext from "../Store";
+import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { authActions, layoutActions } from "../Store";
 const Signup = () => {
-    const ctx = useContext(PageContext);
-	const isAuthenticated = ctx.isAuthenticated;
+	const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
 	const history = useHistory();
-	
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		dispatch(layoutActions.setTitle('Sabir'));
+		dispatch(layoutActions.setHeaderAlignment('text-center'));
+	}, [])
+
     useEffect(() => {
-		ctx.setTitle('Sign up')
-        ctx.headerAlignment('text-center');
 		if (isAuthenticated) {
 			history.push("/");
 		}
@@ -16,7 +20,7 @@ const Signup = () => {
 
 	const loginHandler = (event) => {
 		event.preventDefault();
-		ctx.login();
+		dispatch(authActions.login());
 	}
     return (
         <div className="container margin-bottom-100px">
