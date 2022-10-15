@@ -1,5 +1,14 @@
 import {createSlice, configureStore, combineReducers} from '@reduxjs/toolkit';
-import { persistStore, persistReducer } from 'redux-persist';
+import {
+    persistStore,
+    persistReducer,
+    FLUSH,
+    REHYDRATE,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+  } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
 const initialState = {
@@ -49,7 +58,7 @@ const recipeState = {
         {name: 'Asian', image: '/img/cat-5.jpg'},
         {name: 'Pizza', image: '/img/cat-6.jpg'}
     ],
-    currentCategory: 'indian'
+    currentCategory: ''
 }
 const recipeSlice = createSlice({
     name: 'recipeSlice',
@@ -69,7 +78,7 @@ const recipeSlice = createSlice({
 })
 
 const persistConfig = {
-    key: 'root',
+    key: 'recipeStore',
     storage
 }
 
@@ -83,7 +92,13 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const store = configureStore({  
     reducer: persistedReducer,
-    devTools: process.env.NODE_ENV !== 'production',
+    middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+    devTools: process.env.NODE_ENV !== 'production'
 })
 
 
