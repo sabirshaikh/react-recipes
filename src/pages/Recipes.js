@@ -20,11 +20,10 @@ const Category = () => {
     const currentCategory = useSelector(state => state.recipeReducer.currentCategory);
     const searchControlRef = useRef('');
     const dispatch = useDispatch();
-
+    dispatch(layoutActions.setTitle(`${categoryName} Recipes | Cook Note`));
     useEffect(()=> {
         console.log("currentCategory:", currentCategory)
         dispatch(layoutActions.setHeaderAlignment('text-left'));
-        dispatch(layoutActions.setTitle(`${categoryName} Recipes | Cook Note`));
     },[])
 
     useEffect(()=> {
@@ -132,7 +131,6 @@ const Category = () => {
             </div>
             <div className="container margin-bottom-100px">
                 {error && <p>Something went wrong!</p>}
-                {showLoader && <p>Loading...</p>}
                 { recipesBlock.length == 0 && !showLoader && !error ? <p>{categoryName} Recipes Not Found, Please try again <Link to="/recipes" className="text-main-color">recipes</Link></p> : <div className="row">
                     {recipesBlock}
                 </div>
