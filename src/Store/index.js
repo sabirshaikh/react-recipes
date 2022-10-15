@@ -1,4 +1,6 @@
-import {createSlice, configureStore} from '@reduxjs/toolkit';
+import {createSlice, configureStore, combineReducers} from '@reduxjs/toolkit';
+import { persistStore, persistReducer } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'
 
 const initialState = {
     isAuthenticated: false
@@ -66,17 +68,29 @@ const recipeSlice = createSlice({
     }
 })
 
+const persistConfig = {
+    key: 'root',
+    storage
+}
 
-const store = configureStore({
-    reducer: {
-        authReducer: authSlice.reducer,
-        layoutReducer: layoutSlice.reducer,
-        recipeReducer: recipeSlice.reducer
-    }
+const rootReducer = combineReducers({ 
+    authReducer: authSlice.reducer,
+    layoutReducer: layoutSlice.reducer,
+    recipeReducer: recipeSlice.reducer
+  })
+
+const persistedReducer = persistReducer(persistConfig, rootReducer)
+
+const store = configureStore({  
+    reducer: persistedReducer,
+    devTools: process.env.NODE_ENV !== 'production',
 })
+
+
 
 export const authActions = authSlice.actions;
 export const layoutActions = layoutSlice.actions;
 export const recipeActions = recipeSlice.actions;
 
 export default store;
+export const persistor = persistStore(store)
