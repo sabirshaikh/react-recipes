@@ -13,24 +13,26 @@ const Category = () => {
     const params = useParams();
     const [from, setFrom] = useState(0);
     const [recipesBlock, setRecipesBlock] = useState([]);
-    const categoryName = params.id ? params.id : 'indian';
+    const categoryName = params.id ? params.id.trim() : 'indian';
     const [error, setError] = useState(null);
     const showLoader = useSelector(state => state.layoutReducer.showLoader);
     const recipes = useSelector(state => state.recipeReducer.recipes);
+    const currentCategory = useSelector(state => state.recipeReducer.currentCategory);
     const searchControlRef = useRef('');
     const dispatch = useDispatch();
 
     useEffect(()=> {
+        console.log("currentCategory:", currentCategory)
         dispatch(layoutActions.setHeaderAlignment('text-left'));
         dispatch(layoutActions.setTitle(`${categoryName} Recipes | Cook Note`));
     },[])
 
     useEffect(()=> {
-        if(!categoryName) {
-            history.replace("/404");
-            return
-        } 
-        fetchRecipes(null, true);
+        if(currentCategory.toLowerCase() !== categoryName.toLowerCase()) {
+            console.log("not same cate");
+            dispatch(recipeActions.setCategory(categoryName.toLowerCase()))
+            fetchRecipes(null, true);
+        }
     }, [categoryName])
 
     useEffect(() => {

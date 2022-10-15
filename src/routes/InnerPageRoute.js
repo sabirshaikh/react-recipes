@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Route } from "react-router-dom";
 import InnerPageLayout from "../Layout/InnerPageLayout";
 import { useSelector } from "react-redux";

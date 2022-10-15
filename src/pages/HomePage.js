@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect } from "react";
+import { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import RecipeCard2 from "../components/RecipeCard/RecipeCard2";

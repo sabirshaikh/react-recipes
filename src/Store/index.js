@@ -46,7 +46,8 @@ const recipeState = {
         {name: 'Salad', image: '/img/cat-4.jpg'},
         {name: 'Asian', image: '/img/cat-5.jpg'},
         {name: 'Pizza', image: '/img/cat-6.jpg'}
-    ]
+    ],
+    currentCategory: 'indian'
 }
 const recipeSlice = createSlice({
     name: 'recipeSlice',
@@ -58,6 +59,9 @@ const recipeSlice = createSlice({
             } else {
                 state.recipes = [...state.recipes, ...action.payload.data];
             }
+        },
+        setCategory(state, action) {
+            state.currentCategory = action.payload;
         }
     }
 })

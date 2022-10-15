@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import MainNavigation from "../MainNavigation/MainNavigation";
 import { useSelector, useDispatch } from "react-redux";

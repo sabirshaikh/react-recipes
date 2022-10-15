@@ -1,5 +1,5 @@
-import {useContext, useEffect, useCallback, useState } from "react"
-import { Link, useParams } from "react-router-dom";
+import {useEffect, useCallback, useState } from "react"
+import { useParams } from "react-router-dom";
 import CategoryCard from "../components/RecipeCategoryCard/CategoryCard";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
