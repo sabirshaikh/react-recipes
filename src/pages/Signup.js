@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions, layoutActions } from "../Store";
+import { asynLogin } from "../Store/authSlice";
+
 const Signup = () => {
 	const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
 	const history = useHistory();
@@ -20,8 +22,9 @@ const Signup = () => {
 
 	const loginHandler = (event) => {
 		event.preventDefault();
-		dispatch(authActions.login());
+		dispatch(asynLogin());
 	}
+	
     return (
         <div className="container margin-bottom-100px">
 	
