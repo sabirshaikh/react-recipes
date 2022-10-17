@@ -123,14 +123,6 @@ const Signup = () => {
 						<label className="control-label">Your Password</label>
 						<input className="form-control" placeholder="Enter Pasword" type="password" ref={passwordRef} />
 					</div>
-
-					<div className="remember">
-						<div className="checkbox">
-							<label><input name="optionsCheckboxes" type="checkbox" />Remember Me</label>
-						</div>
-						<a href="#" className="forgot">Forgot my Password</a>
-					</div>
-
 					<button type="submit" className="btn btn-md btn-primary full-width">Sign Up</button>
 					<p>Already have an account? <Link to="/signin">Login Now!</Link> </p>
 				</form>

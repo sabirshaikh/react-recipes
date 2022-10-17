@@ -14,25 +14,25 @@ function App() {
   //   user.loggedIn ? ctx.login() : ctx.logout();
   // }, [location])
 
-  const onStorageUpdate = (e) => {
-    if (e.key === 'persist:recipeStore') {
-      const newValue = JSON.parse(e.newValue);
-      const authReducer = JSON.parse(newValue.authReducer);
-      console.log("strage old value:", authReducer.isAuthenticated)
-      if(authReducer.isAuthenticated) {
-        dispatch(authActions.login())
-      } else {
-        dispatch(authActions.logout())
-      }
-    }
-  };
+  // const onStorageUpdate = (e) => {
+  //   if (e.key === 'persist:recipeStore') {
+  //     const newValue = JSON.parse(e.newValue);
+  //     const authReducer = JSON.parse(newValue.authReducer);
+  //     console.log("strage old value:", authReducer.isAuthenticated)
+  //     if(authReducer.isAuthenticated) {
+  //       dispatch(authActions.login())
+  //     } else {
+  //       dispatch(authActions.logout())
+  //     }
+  //   }
+  // };
 
-  useEffect(() => {
-    window.addEventListener("storage", onStorageUpdate);
-    return () => {
-      window.removeEventListener("storage", onStorageUpdate);
-    };
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener("storage", onStorageUpdate);
+  //   return () => {
+  //     window.removeEventListener("storage", onStorageUpdate);
+  //   };
+  // }, []);
 
 
   return (

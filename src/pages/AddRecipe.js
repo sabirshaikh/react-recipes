@@ -1,7 +1,14 @@
+import { useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { layoutActions } from "../Store";
 const AddRecipe = () => {
+	const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(layoutActions.setTitle('Add Recipe'));
+        dispatch(layoutActions.setHeaderAlignment('text-left'));
+    }, [])
     return (
         <div className="container">
-
             <div className="margin-tb-45px full-width">
                 <h4 className="padding-lr-30px padding-tb-20px background-white box-shadow border-radius-10"><i className="far fa-list-alt margin-right-10px text-main-color"></i>Basic Informations</h4>
                 <div className="padding-30px padding-bottom-30px background-white border-radius-10">
