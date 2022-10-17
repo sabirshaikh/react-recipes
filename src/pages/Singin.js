@@ -2,10 +2,9 @@ import { useEffect, useRef } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions, layoutActions } from "../Store";
-import { asynLogin } from "../Store/authSlice";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-const Signup = () => {
+const Signin = () => {
 	const MySwal = withReactContent(Swal)
 	const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
 	const history = useHistory();
@@ -14,7 +13,7 @@ const Signup = () => {
 	const passwordRef = useRef();
 	
 	useEffect(() => {
-		dispatch(layoutActions.setTitle('Sign Up'));
+		dispatch(layoutActions.setTitle('Sing In'));
 		dispatch(layoutActions.setHeaderAlignment('text-center'));
 	}, [])
 
@@ -28,7 +27,7 @@ const Signup = () => {
 		let errorMsg = 'Something went wrong!'
 		try {
 			dispatch(layoutActions.showLoader(true));
-		  	let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDRohny3ltD8ORRdQxLQfLCtyHgWRJjk9I';
+            let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDRohny3ltD8ORRdQxLQfLCtyHgWRJjk9I';
 		  	const response = await fetch(url,{
 				method: 'POST',
 				body: JSON.stringify({
@@ -51,40 +50,39 @@ const Signup = () => {
 				Swal.fire({
 					icon: 'success',
 					title: 'Success',
-					text: 'Successfully sign up',
+					text: 'Successfully sign In',
 					timer: 2000,
 					willClose: () => {
-						history.push("/signin");
+						// history.push("/");
 					}
 				})
+            dispatch(authActions.login({
+                token: responseData.idToken,
+                userInfo: {
+                    email: responseData.email,
+                    expiresIn: responseData.expiresIn
+                }
+            }));
 			//   const expireTime = new Date(new Date().getTime() + (10 * 1000))
 			//   authCtx.login(responseData.idToken, expireTime.toISOString() );
 			//   authCtx.userData(responseData);
 			//   history.replace("/");
-			  console.log("localId:", responseData.expiresIn)
+			  console.log("localId:", responseData)
 			}
 			dispatch(layoutActions.showLoader(false));
 		} catch (error) {
 			dispatch(layoutActions.showLoader(false));
 			console.log("error in catch:", error.message)
 
-			if(error.message === 'INVALID_EMAIL') {
-				errorMsg = "Entered email is invalid"
+			if(error.message === 'EMAIL_NOT_FOUND') {
+				errorMsg = "Entered email is not found"
 			}
 			
-			if(error.message.includes('WEAK_PASSWORD')) {
-				errorMsg = "Password should be at least 6 characters"
+			if(error.message.includes('INVALID_PASSWORD')) {
+				errorMsg = "Entered password is invalid"
 			}
 
-			if(error.message.includes('EMAIL_EXISTS')) {
-				errorMsg = "The email address is already in use by another account"
-			}
-
-			if(error.message.includes('OPERATION_NOT_ALLOWED')) { 
-				errorMsg = "Password sign-in is disabled for this project."
-			}
-
-			if(error.message.includes('TOO_MANY_ATTEMPTS_TRY_LATER')) { 
+            if(error.message.includes('TOO_MANY_ATTEMPTS_TRY_LATER')) { 
 				errorMsg = "We have blocked all requests from this device due to unusual activity. Try again later."
 			}
 			
@@ -131,8 +129,8 @@ const Signup = () => {
 						<a href="#" className="forgot">Forgot my Password</a>
 					</div>
 
-					<button type="submit" className="btn btn-md btn-primary full-width">Sign Up</button>
-					<p>Already have an account? <Link to="/signin">Login Now!</Link> </p>
+					<button type="submit" className="btn btn-md btn-primary full-width">Sign In</button>
+					<p>Don't you have an account? <Link to="/singup">Register Now!</Link> </p>
 				</form>
 			</div>
 		</div>
@@ -142,4 +140,4 @@ const Signup = () => {
     )
 }
 
-export default Signup;
+export default Signin;

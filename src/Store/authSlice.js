@@ -1,18 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { layoutActions } from '.';
+import Swal from 'sweetalert2'
 const initialState = {
-    isAuthenticated: false
+    isAuthenticated: false,
+    userInfo: null,
+    userToken: null
 }
 
 const authSlice = createSlice({
     name: 'authSlice',
     initialState,
     reducers: {
-        login(state) {
-            state.isAuthenticated = true
+        login(state, action) {
+            state.isAuthenticated = !!action.payload.token;
+            state.userToken = action.payload.token;
+            state.userInfo = action.payload.userInfo;
         },
         logout(state) {
-            state.isAuthenticated = false
+            state.isAuthenticated = !!state.token;
+            state.userInfo = null;
+            state.userToken = null;
+            Swal.fire({
+                icon: 'success',
+                title: 'Logout',
+                text: 'Logout Successfully',
+                timer: 2000
+            })
         }
     }
 });

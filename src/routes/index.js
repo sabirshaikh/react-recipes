@@ -3,6 +3,7 @@ import HomePage from '../pages/HomePage';
 import Recipes from '../pages/Recipes';
 import RecipeDetails from '../pages/RecipeDetails';
 import Signup from '../pages/Signup';
+import Signin from '../pages/Singin';
 import NotFound from '../pages/NotFound';
 import InnerPageRoute from './InnerPageRoute';
 import MasterPageRoute from './MasterPageRoute';
@@ -15,6 +16,7 @@ const Routers = () => {
             <InnerPageRoute path='/recipes/:id' component={Recipes} />
             <InnerPageRoute path='/recipeDetails/:id' component={RecipeDetails} />
             <InnerPageRoute path='/singup' component={Signup} />
+            <InnerPageRoute path='/signin' component={Signin} />
             <InnerPageRoute path="/addrecipe" component={AddRecipe} isProtected/>
             <InnerPageRoute path="/*" component={NotFound} />
         </Switch>
