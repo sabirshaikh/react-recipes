@@ -4,9 +4,8 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { layoutActions, recipeActions } from "../Store";
 import RecipeCard1 from "../components/RecipeCard/RecipeCard1";
-// import axios from "axios";
+import axios from "axios";
 import InputControl from "../components/UI/InputControl";
-import { getRecipes } from "../Store/recipeSlice";
 
 const Category = () => {
     console.log("Recipe page call")
@@ -19,41 +18,28 @@ const Category = () => {
     const showLoader = useSelector(state => state.layoutReducer.showLoader);
     const recipes = useSelector(state => state.recipeReducer.recipes);
     const currentCategory = useSelector(state => state.recipeReducer.currentCategory);
-    const recipeError = useSelector(state => state.recipeReducer.error);
-    const recipeMessage = useSelector(state => state.recipeReducer.errorMessage);
     const searchControlRef = useRef('');
     const dispatch = useDispatch();
-    console.log("error from thunk:", recipeError, recipeMessage)
+    dispatch(layoutActions.setTitle(`${categoryName} Recipes | Cook Note`));
     useEffect(()=> {
         console.log("currentCategory:", currentCategory)
         dispatch(layoutActions.setHeaderAlignment('text-left'));
     },[])
 
     useEffect(()=> {
-        console.log("error from thunk:", recipeError)
-        console.log("error from thunk:", recipeMessage)
-    }, [recipeError])
-
-    useEffect(()=> {
-        dispatch(layoutActions.setTitle(`${categoryName} Recipes | Cook Note`));
         if(currentCategory.toLowerCase() !== categoryName.toLowerCase() || recipes.length == 0) {
             console.log("not same cate");
             dispatch(recipeActions.setCategory(categoryName.toLowerCase()))
-            dispatch(getRecipes(categoryName ,null, true))
-            // fetchRecipes(null, true);
-        } 
+            fetchRecipes(null, true);
+        }
     }, [categoryName])
 
     useEffect(() => {
         if(from > 0) {
-            dispatch(getRecipes(categoryName,{
+            fetchRecipes({
                 from,
                 to: from + 10
-            }))
-            // fetchRecipes({
-            //     from,
-            //     to: from + 10
-            // })
+            })
         }
     }, [from]);
 
@@ -75,13 +61,44 @@ const Category = () => {
         setRecipesBlock(recipeBlock);
     }, [recipes]);
 
-    
+    const fetchRecipes = useCallback((showMore, replace = false) => {
+        console.log("call recipe")
+        dispatch(layoutActions.showLoader(true));
+        let apiCall = `https://api.edamam.com/search?imageSize=THUMBNAIL&q='${categoryName}'&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
+        if(showMore) {
+            const {from, to} = showMore;
+            console.log('call more:', from, to);
+            apiCall = `https://api.edamam.com/search?from=${from}&to=${to}&imageSize=THUMBNAIL&q='${categoryName}'&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
+        }
+
+        try {
+            axios.get(apiCall)
+            .then((res)=> {
+                if(res.status === 200) {
+                    console.log(res.data);
+                    dispatch(recipeActions.setRecipes({
+                        data: res.data.hits,
+                        replace
+                    }))
+                }
+                dispatch(layoutActions.showLoader(false));
+            })
+            .catch((error)=> {
+                dispatch(layoutActions.showLoader(false));
+                console.log("error:", error);
+                setError(error.message);
+            })
+        } catch (error) {
+            dispatch(layoutActions.showLoader(false));
+            console.log('error while fetching data...')
+        }
+    });
 
     const showMoreRecipesHandler = () => {
         setFrom(count => count + 1)
     }
 
-    const searchHandler = (e) => {
+    const serchHandler = (e) => {
         e.preventDefault();
         console.log("search value:", searchControlRef.current.value)
         history.push(`/recipes/${searchControlRef.current.value}`);
@@ -92,7 +109,7 @@ const Category = () => {
             <div className="container">
                 <div className="margin-bottom-60px">
                     <div className="listing-search box-shadow">
-                        <form className="row no-gutters" onSubmit={searchHandler}>
+                        <form className="row no-gutters" onSubmit={serchHandler}>
                             <div className="col-md-8">
                                 <div className="keywords">
                                     {/* <input  /> */}
@@ -113,13 +130,13 @@ const Category = () => {
                 </div>
             </div>
             <div className="container margin-bottom-100px">
-                {recipeError && <p className="text-red">{recipeMessage}</p>}
-                { recipesBlock.length == 0 && !showLoader && !recipeError ? <p>{categoryName} Recipes Not Found, Please try again <Link to="/recipes" className="text-main-color">recipes</Link></p> : <div className="row">
+                {error && <p>Something went wrong!</p>}
+                { recipesBlock.length == 0 && !showLoader && !error ? <p>{categoryName} Recipes Not Found, Please try again <Link to="/recipes" className="text-main-color">recipes</Link></p> : <div className="row">
                     {recipesBlock}
                 </div>
                 }
                 {   
-                   recipesBlock.length > 0 && <div className="text-center">
+                   recipesBlock && <div className="text-center">
                         <button onClick={showMoreRecipesHandler} className="btn box-shadow margin-top-50px padding-tb-10px btn-sm border-2 border-radius-30 btn-inline-block width-210px background-second-color text-white">Show More Recipes</button>
                     </div>
                 }
