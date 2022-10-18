@@ -1,17 +1,61 @@
-import { Fragment } from "react";
+import { Fragment, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from 'react-redux';
+import axios from "axios";
+import { layoutActions, recipeActions } from "../Store";
 import RecipeCard2 from "../components/RecipeCard/RecipeCard2";
 import CategoryCard from "../components/RecipeCategoryCard/CategoryCard";
 const HomePage = () => {
   const recipeCategory = useSelector(state => state.recipeReducer.recipeCategory)
+  const dispatch = useDispatch();
+  const recipes = useSelector(state => state.recipeReducer.recipes);
+
+  useEffect(()=> {
+    if(recipes.length == 0) {
+        dispatch(recipeActions.setCategory('indian'))
+        fetchRecipes();
+    }
+  }, [])
+
+  const fetchRecipes = useCallback(() => {
+    dispatch(layoutActions.showLoader(true));
+    let apiCall = `https://api.edamam.com/search?imageSize=THUMBNAIL&q=''&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
+
+    try {
+        axios.get(apiCall)
+        .then((res)=> {
+            if(res.status === 200) {
+                console.log(res.data);
+                dispatch(recipeActions.setRecipes({
+                    data: res.data.hits
+                }))
+            }
+            dispatch(layoutActions.showLoader(false));
+        })
+        .catch((error)=> {
+            dispatch(layoutActions.showLoader(false));
+            console.log("error:", error);
+        })
+    } catch (error) {
+        dispatch(layoutActions.showLoader(false));
+        console.log('error while fetching data...')
+    }
+  });
 
   const RecipeBlock = () => {
       var data = [];
       for(let i=0; i < 4; i++) {
+        console.log(`recipes${i} :${recipes[i].recipe.label}`)
           data.push(
           <div  key={'recipe' + i} className="col-xl-3 col-lg-4 col-md-6 recipe-item margin-bottom-40px">
-            <RecipeCard2 key={'recipeCard' + i} recipeName={`recipe${i}`} rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} />
+            <RecipeCard2 
+              key={'recipeCard' + i} 
+              recipeName={recipes[i].recipe.label} 
+              recipeUrl={recipes[i].recipe.uri}
+              recipeImage={recipes[i].recipe.image}
+              recipeServing={recipes[i].recipe.yield} 
+              rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} 
+            />
           </div>)
       }
       return data;

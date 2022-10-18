@@ -8,7 +8,6 @@ import axios from "axios";
 import InputControl from "../components/UI/InputControl";
 
 const Category = () => {
-    console.log("Recipe page call")
     const history = useHistory();
     const params = useParams();
     const [from, setFrom] = useState(0);
