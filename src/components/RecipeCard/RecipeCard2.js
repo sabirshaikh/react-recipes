@@ -26,7 +26,7 @@ const RecipeCard2 = (props) => {
                 </Link>
             </div>
             <div className="padding-lr-30px padding-tb-20px">
-                <h5 className="margin-bottom-20px margin-top-10px"><Link to={`/recipeDetails/${props.recipeName}`} className="d-block text-dark text-capitalize text-medium margin-tb-15px">{props.recipeName} </Link></h5>
+                <h5 className="margin-bottom-20px margin-top-10px"><Link to={`/recipeDetails/${id}`} className="d-block text-dark text-capitalize text-medium margin-tb-15px">{props.recipeName} </Link></h5>
                 <div className="rating">
                 <ul>
                     <RatingBlock/>

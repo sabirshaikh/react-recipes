@@ -99,8 +99,8 @@ const RecipeDetails = () => {
                             <hr/>
                             <h3>Ingredients</h3>
                             <ul>
-                                {recipeData.ingredientLines.map(data => {
-                                    return <li>{data}</li>
+                                {recipeData.ingredientLines.map((data, index) => {
+                                    return <li key={'ingredient-' + index}>{data}</li>
                                 })}
                             </ul>
                             <h3>Method</h3>
