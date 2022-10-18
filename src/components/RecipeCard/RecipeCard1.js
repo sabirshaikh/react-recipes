@@ -13,13 +13,14 @@ const RecipeCard1 = (props) => {
     }
 
     return (
-        <div className="background-white thum-hover box-shadow hvr-float full-width">
+        <div className="background-white thum-hover box-shadow hvr-float full-width full-height">
             <div className="float-md-left margin-right-30px thum-xs">
             <Link to={`/recipeDetails/${id}`}>
             <LazyLoadImage
                 src={props.recipeImage}
                 effect="blur"
                 width='100%'
+                className="width-250px"
             />
           
                 {/* <img className="width-250px" src={props.recipeImage} alt="" /> */}

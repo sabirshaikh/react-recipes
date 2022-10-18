@@ -87,8 +87,6 @@ const Signin = () => {
 			}
 			
 			console.log("sabir error:", error.message)
-			
-		//   alert(error);
 		  	MySwal.fire({
 				icon: 'error',
 				title: 'Error',

@@ -1,5 +1,5 @@
 import {useEffect, useCallback, useState } from "react"
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import CategoryCard from "../components/RecipeCategoryCard/CategoryCard";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
@@ -9,7 +9,7 @@ const RecipeDetails = () => {
     const params = useParams();
     const [recipeData, setRecipeData] = useState(null);
     const recipeCategory = useSelector(state => state.recipeReducer.recipeCategory)
-
+    const history = useHistory();
     useEffect(() => {
 		dispatch(layoutActions.setHeaderAlignment('text-left'));
     }, []);
@@ -30,7 +30,11 @@ const RecipeDetails = () => {
         try {
             axios.get(apiCall)
             .then((res)=> {
+                console.log("res:", res.data.length);
                 if(res.status === 200) {
+                    if(res.data.length == 0){
+                        history.replace("/404")
+                    }
                     setRecipeData(res.data[0]);
                 }
                 dispatch(layoutActions.showLoader(false));
@@ -143,7 +147,7 @@ const RecipeDetails = () => {
                     </div>
                     }
                     {
-                        !recipeData && "not found"
+                        !recipeData && <p>Loading....</p>
                     }
                 </div>
 
