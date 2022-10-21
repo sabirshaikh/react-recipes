@@ -18,16 +18,19 @@ const Category = () => {
     const recipes = useSelector(state => state.recipeReducer.recipes);
     const currentCategory = useSelector(state => state.recipeReducer.currentCategory);
     const searchControlRef = useRef('');
+    const [isSearchValueValidated, setIsSearchValueValidated] = useState({
+        error: false,
+        errorMessage: ''
+    });
     const dispatch = useDispatch();
-    dispatch(layoutActions.setTitle(`${categoryName} Recipes | Cook Note`));
     useEffect(()=> {
-        console.log("currentCategory:", currentCategory)
         dispatch(layoutActions.setHeaderAlignment('text-left'));
     },[])
 
     useEffect(()=> {
+        dispatch(layoutActions.setTitle(`${categoryName} Recipes | Cook Note`));
+
         if(currentCategory.toLowerCase() !== categoryName.toLowerCase() || recipes.length == 0) {
-            console.log("not same cate");
             dispatch(recipeActions.setCategory(categoryName.toLowerCase()))
             fetchRecipes(null, true);
         }
@@ -43,7 +46,6 @@ const Category = () => {
     }, [from]);
 
     useEffect(() => {
-        console.log("call block to render:", recipes);
         const recipeBlock = recipes.map((data, i) => {
             return (
                 <div  key={i} className="col-lg-6 margin-bottom-30px">
@@ -61,12 +63,10 @@ const Category = () => {
     }, [recipes]);
 
     const fetchRecipes = useCallback((showMore, replace = false) => {
-        console.log("call recipe")
         dispatch(layoutActions.showLoader(true));
         let apiCall = `https://api.edamam.com/search?imageSize=THUMBNAIL&q='${categoryName}'&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
         if(showMore) {
             const {from, to} = showMore;
-            console.log('call more:', from, to);
             apiCall = `https://api.edamam.com/search?from=${from}&to=${to}&imageSize=THUMBNAIL&q='${categoryName}'&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39`;
         }
 
@@ -74,7 +74,6 @@ const Category = () => {
             axios.get(apiCall)
             .then((res)=> {
                 if(res.status === 200) {
-                    console.log(res.data);
                     dispatch(recipeActions.setRecipes({
                         data: res.data.hits,
                         replace
@@ -84,12 +83,10 @@ const Category = () => {
             })
             .catch((error)=> {
                 dispatch(layoutActions.showLoader(false));
-                console.log("error:", error);
                 setError(error.message);
             })
         } catch (error) {
             dispatch(layoutActions.showLoader(false));
-            console.log('error while fetching data...')
         }
     });
 
@@ -97,10 +94,31 @@ const Category = () => {
         setFrom(count => count + 1)
     }
 
-    const serchHandler = (e) => {
+    const formIsValidated = () => {
+        const searchValue = searchControlRef.current.value;
+        if((searchValue.trim()).length == 0) {
+            setIsSearchValueValidated({
+                error: true,
+                errorMessage: 'Please enter the value.'
+            })
+        } else {
+            setIsSearchValueValidated({
+                error: false,
+                errorMessage: ''
+            })
+        }
+    }
+
+    const inputChangedHandler = (event) => {
+        const updatedKeyword = event.target.value;
+    }
+
+    const searchHandler = (e) => {
         e.preventDefault();
-        console.log("search value:", searchControlRef.current.value)
-        history.push(`/recipes/${searchControlRef.current.value}`);
+        formIsValidated();
+        if(isSearchValueValidated.error) {
+            history.push(`/recipes/${searchControlRef.current.value}`)
+        } 
     }
 
     return (
@@ -108,15 +126,17 @@ const Category = () => {
             <div className="container">
                 <div className="margin-bottom-60px">
                     <div className="listing-search box-shadow">
-                        <form className="row no-gutters" onSubmit={serchHandler}>
+                        <form className="row no-gutters" onSubmit={searchHandler}>
                             <div className="col-md-8">
                                 <div className="keywords">
                                     {/* <input  /> */}
                                     <InputControl 
                                         ref={searchControlRef}
-                                        className="listing-form first" 
+                                        className={`listing-form first ${isSearchValueValidated.error? 'inValid' : ''}`}
                                         type="text" 
                                         placeholder="Enter recipe name" 
+                                        defaultValue={categoryName}
+                                        onChange={inputChangedHandler}
                                     />
                                 </div>
                             </div>
@@ -126,6 +146,7 @@ const Category = () => {
                             </div>
                         </form>
                     </div>
+                    { isSearchValueValidated.error && <p className="text-main-color mt-3">{isSearchValueValidated.errorMessage}</p>}
                 </div>
             </div>
             <div className="container margin-bottom-100px">
