@@ -30,7 +30,7 @@ const Category = () => {
     useEffect(()=> {
         dispatch(layoutActions.setTitle(`${categoryName} Recipes | Cook Note`));
 
-        if(currentCategory.toLowerCase() !== categoryName.toLowerCase() || recipes.length == 0) {
+        if(currentCategory.toLowerCase() !== categoryName.toLowerCase() || recipes.length === 0) {
             dispatch(recipeActions.setCategory(categoryName.toLowerCase()))
             fetchRecipes(null, true);
         }
@@ -96,7 +96,7 @@ const Category = () => {
 
     const formIsValidated = () => {
         const searchValue = searchControlRef.current.value;
-        if((searchValue.trim()).length == 0) {
+        if((searchValue.trim()).length === 0) {
             setIsSearchValueValidated({
                 error: true,
                 errorMessage: 'Please enter the value.'
@@ -151,7 +151,7 @@ const Category = () => {
             </div>
             <div className="container margin-bottom-100px">
                 {error && <p>Something went wrong!</p>}
-                { recipesBlock.length == 0 && !showLoader && !error ? <p>{categoryName} Recipes Not Found, Please try again <Link to="/recipes" className="text-main-color">recipes</Link></p> : <div className="row">
+                { recipesBlock.length === 0 && !showLoader && !error ? <p>{categoryName} Recipes Not Found, Please try again <Link to="/recipes" className="text-main-color">recipes</Link></p> : <div className="row">
                     {recipesBlock}
                 </div>
                 }

@@ -32,7 +32,7 @@ const RecipeDetails = () => {
             .then((res)=> {
                 console.log("res:", res.data.length);
                 if(res.status === 200) {
-                    if(res.data.length == 0){
+                    if(res.data.length === 0){
                         history.replace("/404")
                     }
                     setRecipeData(res.data[0]);

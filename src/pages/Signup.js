@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { authActions, layoutActions } from "../Store";
-import { asynLogin } from "../Store/authSlice";
+import { layoutActions } from "../Store";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const Signup = () => {
@@ -16,7 +15,7 @@ const Signup = () => {
 	useEffect(() => {
 		dispatch(layoutActions.setTitle('Sign Up'));
 		dispatch(layoutActions.setHeaderAlignment('text-center'));
-	}, [])
+	}, [dispatch])
 
     useEffect(() => {
 		if (isAuthenticated) {

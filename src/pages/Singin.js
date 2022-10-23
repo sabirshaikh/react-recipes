@@ -24,7 +24,7 @@ const Signin = () => {
     }, [isAuthenticated])
 
 	async function sendRequest() {
-		let errorMsg = 'Something went wrong!'
+		let errorMsg = 'couldn\'t sign in';
 		try {
 			dispatch(layoutActions.showLoader(true));
             let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDRohny3ltD8ORRdQxLQfLCtyHgWRJjk9I';
@@ -73,6 +73,10 @@ const Signin = () => {
 		} catch (error) {
 			dispatch(layoutActions.showLoader(false));
 			console.log("error in catch:", error.message)
+
+			if(error.message === 'INVALID_EMAIL') {
+				errorMsg = "Please entered valid email"
+			}
 
 			if(error.message === 'EMAIL_NOT_FOUND') {
 				errorMsg = "Entered email is not found"
