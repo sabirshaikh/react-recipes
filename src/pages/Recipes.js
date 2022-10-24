@@ -17,11 +17,21 @@ const Category = () => {
     const showLoader = useSelector(state => state.layoutReducer.showLoader);
     const recipes = useSelector(state => state.recipeReducer.recipes);
     const currentCategory = useSelector(state => state.recipeReducer.currentCategory);
+
     const searchControlRef = useRef('');
-    const [isSearchValueValidated, setIsSearchValueValidated] = useState({
-        error: false,
-        errorMessage: ''
-    });
+    const [searchValue, setSearchValue] = useState('');
+    const [isSearchTouched, setIsSearchTouched] = useState(false);
+
+    const enteredSearchValueIsValid = searchValue.trim() !== '';
+    const searchValueIsInvalid = !enteredSearchValueIsValid && isSearchTouched;
+
+
+    const valueIsInvalid = !enteredSearchValueIsValid && isSearchTouched;
+    let formIsValid = false;
+    if (enteredSearchValueIsValid ) {
+        formIsValid = true
+    }
+
     const dispatch = useDispatch();
     useEffect(()=> {
         dispatch(layoutActions.setHeaderAlignment('text-left'));
@@ -94,31 +104,28 @@ const Category = () => {
         setFrom(count => count + 1)
     }
 
-    const formIsValidated = () => {
-        const searchValue = searchControlRef.current.value;
-        if((searchValue.trim()).length === 0) {
-            setIsSearchValueValidated({
-                error: true,
-                errorMessage: 'Please enter the value.'
-            })
-        } else {
-            setIsSearchValueValidated({
-                error: false,
-                errorMessage: ''
-            })
-        }
+    const searchChangedHandler = (event) => {
+        setSearchValue(event.target.value);
+        setIsSearchTouched(true);
     }
 
-    const inputChangedHandler = (event) => {
-        const updatedKeyword = event.target.value;
+    const searchBlurHandler = (event) => {
+        setIsSearchTouched(true);
     }
 
     const searchHandler = (e) => {
         e.preventDefault();
-        formIsValidated();
-        if(isSearchValueValidated.error) {
-            history.push(`/recipes/${searchControlRef.current.value}`)
+        setIsSearchTouched(true);
+        console.log("form is validated:", formIsValid)
+        if(!formIsValid) {
+            console.log("form is invalidated")
+            return;
         } 
+        console.log('redirect ')
+        setSearchValue('');
+        setIsSearchTouched(false);
+        history.push(`/recipes/${searchControlRef.current.value}`)
+
     }
 
     return (
@@ -132,21 +139,22 @@ const Category = () => {
                                     {/* <input  /> */}
                                     <InputControl 
                                         ref={searchControlRef}
-                                        className={`listing-form first ${isSearchValueValidated.error? 'inValid' : ''}`}
+                                        className={`listing-form first ${valueIsInvalid ? 'inValid' : ''}`}
                                         type="text" 
+                                        value={searchValue}
                                         placeholder="Enter recipe name" 
-                                        defaultValue={categoryName}
-                                        onChange={inputChangedHandler}
+                                        onChange={searchChangedHandler}
+                                        onBlur={searchBlurHandler}
                                     />
                                 </div>
+                                {searchValueIsInvalid  && <p className="text-main-color mt-3">Please enter value</p>}
                             </div>
-                            
                             <div className="col-md-4">
-                                <button type="submit" className="listing-bottom background-second-color box-shadow btn">Search Now</button>
+                                <button type="submit" className="listing-bottom background-second-color box-shadow btn" disabled={!formIsValid}>Search Now</button>
                             </div>
                         </form>
                     </div>
-                    { isSearchValueValidated.error && <p className="text-main-color mt-3">{isSearchValueValidated.errorMessage}</p>}
+                   
                 </div>
             </div>
             <div className="container margin-bottom-100px">

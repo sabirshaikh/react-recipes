@@ -27704,6 +27704,11 @@ form.dark-form {
   flex-wrap: wrap;
 }
 
+/* my custom css */
 .btn, a, button {
   cursor: pointer;
+}
+
+.listing-search .listing-form.inValid {
+  background: rgb(244 67 54 / 26%);
 }

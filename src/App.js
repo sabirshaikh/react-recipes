@@ -3,7 +3,8 @@ import { useLocation } from "react-router-dom";
 import Loading from "react-fullscreen-loading";
 import Routers from "./routes";
 import {useSelector, useDispatch} from 'react-redux';
-import { authActions } from "./Store";
+// import { authActions } from "./Store";
+import checkRequests from "./util/AxiosGlobal";
 function App() {
   const showLoader = useSelector(state => state.layoutReducer.showLoader);
 
@@ -45,4 +46,4 @@ function App() {
   );
 }
 
-export default App;
+export default checkRequests(App);
