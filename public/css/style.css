@@ -27709,6 +27709,7 @@ form.dark-form {
   cursor: pointer;
 }
 
-.listing-search .listing-form.inValid {
+.inValid {
   background: rgb(244 67 54 / 26%);
+  border: 1px solid red;
 }

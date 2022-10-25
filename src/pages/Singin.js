@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { authActions, layoutActions } from "../Store";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import useInput from "../Hooks/useInput";
+import InputControl from "../components/UI/InputControl";
 const Signin = () => {
 	const MySwal = withReactContent(Swal)
 	const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
@@ -11,7 +13,31 @@ const Signin = () => {
 	const dispatch = useDispatch();
 	const emailRef = useRef();
 	const passwordRef = useRef();
+
+	const {
+        value: enteredemailValue,
+        hasError: emailHasError,
+        valueChangedHandler: emailChangedHandler,
+        inputBlurHandler: emailBlurHandler,
+        isValid: enteredEmailValueIsValid,
+        reset: resetEmailValue
+    } = useInput(value => value.trim() !== '');
 	
+	const {
+        value: enteredpasswordValue,
+        hasError: passwordHasError,
+        valueChangedHandler: passwordChangedHandler,
+        inputBlurHandler: passwordBlurHandler,
+        isValid: enteredPasswordValueIsValid,
+        reset: resetPasswordValue
+    } = useInput(value => value.trim() !== '');
+
+
+	let formIsValid = false;
+    if (enteredEmailValueIsValid &&  enteredPasswordValueIsValid) {
+        formIsValid = true
+    }
+
 	useEffect(() => {
 		dispatch(layoutActions.setTitle('Sing In'));
 		dispatch(layoutActions.setHeaderAlignment('text-center'));
@@ -102,9 +128,15 @@ const Signin = () => {
 
 	const loginHandler = (event) => {
 		event.preventDefault();
-		console.log("email:", emailRef.current.value);
-		console.log("password:", passwordRef.current.value);
-		sendRequest();
+        console.log("form is validated:", formIsValid)
+        if(!formIsValid) {
+            console.log("form is invalidated")
+            return;
+        } 
+        resetEmailValue();
+		resetPasswordValue();
+        sendRequest();
+		
 		//dispatch(asynLogin());
 	}
 
@@ -117,13 +149,28 @@ const Signin = () => {
 				<form onSubmit={loginHandler}>
 					<div className="form-group label-floating">
 						<label className="control-label">Your Email</label>
-						<input className="form-control" placeholder="Enter Email" type="email" ref={emailRef}/>
+						<InputControl 
+							className={`form-control ${emailHasError ? 'inValid' : ''}`}
+							placeholder="Enter Email" 
+							type="email" ref={emailRef} 
+							onChange={emailChangedHandler}
+							onBlur={emailBlurHandler}
+						/>
+						{emailHasError  && <p className="text-main-color mt-3">Please enter email</p>}
 					</div>
 					<div className="form-group label-floating">
 						<label className="control-label">Your Password</label>
-						<input className="form-control" placeholder="Enter Pasword" type="password" ref={passwordRef} />
+						<InputControl 
+							className={`form-control ${passwordHasError ? 'inValid' : ''}`}
+							placeholder="Enter Pasword" 
+							type="password" 
+							ref={passwordRef} 
+							onChange={passwordChangedHandler}
+							onBlur={passwordBlurHandler}
+						/>
+						{passwordHasError  && <p className="text-main-color mt-3">Please enter password</p>}
 					</div>
-					<button type="submit" className="btn btn-md btn-primary full-width">Sign In</button>
+					<button type="submit" className="btn btn-md btn-primary full-width" disabled={!formIsValid}>Sign In</button>
 					<p>Don't you have an account? <Link to="/singup">Register Now!</Link> </p>
 				</form>
 			</div>
