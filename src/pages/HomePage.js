@@ -42,23 +42,26 @@ const HomePage = () => {
 
   useEffect(() => {
     let data = [];
-      if(recipes.length > 0) {
-        for(let i=0; i < 4; i++) {
-          data.push(
+    console.log("recipes.length:", recipes)
+        data = recipes.map((data, i) => {
+          console.log("recipe data:", data.recipe)
+          if(i > 3) {
+            return; 
+          }
+          return (
             <div  key={'recipe' + i} className="col-xl-3 col-lg-4 col-md-6 recipe-item margin-bottom-40px">
-              <RecipeCard2 
-                key={'recipeCard' + i} 
-                recipeName={recipes[i].recipe.label} 
-                recipeUrl={recipes[i].recipe.uri}
-                recipeImage={recipes[i].recipe.image}
-                recipeServing={recipes[i].recipe.yield} 
-                rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} 
-              />
-            </div>
-          )
-        }
+                  <RecipeCard2 
+                    key={'recipeCard' + i} 
+                    recipeName={data.recipe.label} 
+                    recipeUrl={data.recipe.uri}
+                    recipeImage={data.recipe.image}
+                    recipeServing={data.recipe.yield} 
+                    rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} 
+                  />
+              </div>
+            )
+        })
         setLatestRecipes(data);
-      }
     }, [recipes])
 
 
