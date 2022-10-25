@@ -6,7 +6,7 @@ import { layoutActions, recipeActions } from "../Store";
 import RecipeCard1 from "../components/RecipeCard/RecipeCard1";
 import axios from "axios";
 import InputControl from "../components/UI/InputControl";
-
+import useInput from "../Hooks/useInput";
 const Category = () => {
     const history = useHistory();
     const params = useParams();
@@ -17,16 +17,17 @@ const Category = () => {
     const showLoader = useSelector(state => state.layoutReducer.showLoader);
     const recipes = useSelector(state => state.recipeReducer.recipes);
     const currentCategory = useSelector(state => state.recipeReducer.currentCategory);
-
+    
+    const {
+        value: enteredSearchValue,
+        hasError: searchHasError,
+        valueChangedHandler: searchChangedHandler,
+        inputBlurHandler: searchBlurHandler,
+        isValid: enteredSearchValueIsValid,
+        reset: resetSearchValue
+    } = useInput(value => value.trim() !== '');
     const searchControlRef = useRef('');
-    const [searchValue, setSearchValue] = useState('');
-    const [isSearchTouched, setIsSearchTouched] = useState(false);
 
-    const enteredSearchValueIsValid = searchValue.trim() !== '';
-    const searchValueIsInvalid = !enteredSearchValueIsValid && isSearchTouched;
-
-
-    const valueIsInvalid = !enteredSearchValueIsValid && isSearchTouched;
     let formIsValid = false;
     if (enteredSearchValueIsValid ) {
         formIsValid = true
@@ -104,26 +105,15 @@ const Category = () => {
         setFrom(count => count + 1)
     }
 
-    const searchChangedHandler = (event) => {
-        setSearchValue(event.target.value);
-        setIsSearchTouched(true);
-    }
-
-    const searchBlurHandler = (event) => {
-        setIsSearchTouched(true);
-    }
-
     const searchHandler = (e) => {
         e.preventDefault();
-        setIsSearchTouched(true);
         console.log("form is validated:", formIsValid)
         if(!formIsValid) {
             console.log("form is invalidated")
             return;
         } 
         console.log('redirect ')
-        setSearchValue('');
-        setIsSearchTouched(false);
+        resetSearchValue();
         history.push(`/recipes/${searchControlRef.current.value}`)
 
     }
@@ -139,15 +129,15 @@ const Category = () => {
                                     {/* <input  /> */}
                                     <InputControl 
                                         ref={searchControlRef}
-                                        className={`listing-form first ${valueIsInvalid ? 'inValid' : ''}`}
+                                        className={`listing-form first ${searchHasError ? 'inValid' : ''}`}
                                         type="text" 
-                                        value={searchValue}
+                                        value={enteredSearchValue}
                                         placeholder="Enter recipe name" 
                                         onChange={searchChangedHandler}
                                         onBlur={searchBlurHandler}
                                     />
                                 </div>
-                                {searchValueIsInvalid  && <p className="text-main-color mt-3">Please enter value</p>}
+                                {searchHasError  && <p className="text-main-color mt-3">Please enter value</p>}
                             </div>
                             <div className="col-md-4">
                                 <button type="submit" className="listing-bottom background-second-color box-shadow btn" disabled={!formIsValid}>Search Now</button>
