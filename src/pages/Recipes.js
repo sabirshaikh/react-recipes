@@ -137,14 +137,13 @@ const Category = () => {
                                         onBlur={searchBlurHandler}
                                     />
                                 </div>
-                                {searchHasError  && <p className="text-main-color mt-3">Please enter value</p>}
                             </div>
                             <div className="col-md-4">
                                 <button type="submit" className="listing-bottom background-second-color box-shadow btn" disabled={!formIsValid}>Search Now</button>
                             </div>
                         </form>
                     </div>
-                   
+                    {searchHasError  && <p className="text-main-color mt-3">Please enter value</p>}
                 </div>
             </div>
             <div className="container margin-bottom-100px">

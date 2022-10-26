@@ -27710,6 +27710,6 @@ form.dark-form {
 }
 
 .inValid {
-  background: rgb(244 67 54 / 26%);
-  border: 1px solid red;
+  background: rgb(244 67 54 / 26%) !important;
+  border: 1px solid red !important;
 }

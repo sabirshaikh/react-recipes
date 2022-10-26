@@ -2,8 +2,10 @@ import { useEffect, useRef } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { layoutActions } from "../Store";
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+import { useForm } from "react-hook-form";
+
 const Signup = () => {
 	const MySwal = withReactContent(Swal)
 	const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
@@ -11,7 +13,11 @@ const Signup = () => {
 	const dispatch = useDispatch();
 	const emailRef = useRef();
 	const passwordRef = useRef();
-	
+	const { register, handleSubmit, formState: { errors, isValid }} = useForm({
+		mode: 'all',
+		shouldUnregister: true,
+  		reValidateMode: 'onChange',
+	});
 	useEffect(() => {
 		dispatch(layoutActions.setTitle('Sign Up'));
 		dispatch(layoutActions.setHeaderAlignment('text-center'));
@@ -23,7 +29,12 @@ const Signup = () => {
 		}
     }, [isAuthenticated])
 
-	async function sendRequest() {
+	console.log("Errors:", errors, isValid)
+	let formIsValid = false;
+
+
+	async function sendRequest(data) {
+		console.log("data:", data)
 		let errorMsg = 'Something went wrong!'
 		try {
 			dispatch(layoutActions.showLoader(true));
@@ -31,9 +42,9 @@ const Signup = () => {
 		  	const response = await fetch(url,{
 				method: 'POST',
 				body: JSON.stringify({
-				email: emailRef.current.value,
-				password: passwordRef.current.value,
-				returnSecureToken: true
+					email: data.email,
+					password: data.password,
+					returnSecureToken: true
 				}),
 				headers: {
 				'Content-Type': 'application/json'
@@ -99,36 +110,53 @@ const Signup = () => {
 	   
 	}
 
-	const loginHandler = (event) => {
-		event.preventDefault();
-		console.log("email:", emailRef.current.value);
-		console.log("password:", passwordRef.current.value);
-		sendRequest();
-		//dispatch(asynLogin());
+	const loginHandler = (data) => {
+		console.log("data:", JSON.stringify(data));
+		console.log("email:", data.email);
+		console.log("password:", data.password);
+		sendRequest({
+			email: data.email,
+			password: data.password
+		});
 	}
-
+	
     return (
         <div className="container margin-bottom-100px">
 	
 		<div id="log-in" className="site-form log-in-form box-shadow border-radius-10">
 
 			<div className="form-output">
-				<form onSubmit={loginHandler}>
+				<form onSubmit={handleSubmit(loginHandler)}>
 					<div className="form-group label-floating">
 						<label className="control-label">Your Email</label>
-						<input className="form-control" placeholder="Enter Email" type="email" ref={emailRef}/>
+						<input className={`form-control ${errors.email && 'inValid'}`}
+							placeholder="Enter Email" 
+							type="text" 
+							ref={emailRef} 
+							{...register("email", { 
+								required: "Email Address is required",
+								pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+							})}/>
+						{errors.email && errors.email.type === "required" && <p className="text-main-color">Please enter email</p>}
+						{errors.email && errors.email.type === "pattern" && <p className="text-main-color">Please enter valid email</p> }
 					</div>
 					<div className="form-group label-floating">
 						<label className="control-label">Your Password</label>
-						<input className="form-control" placeholder="Enter Pasword" type="password" ref={passwordRef} />
+						<input className={`form-control ${errors.password && 'inValid'}`}
+							placeholder="Enter Pasword" 
+							type="password" 
+							ref={passwordRef} 
+							{...register("password", 
+							{ required: true, maxLength: 10, minLength: 6 })}/>
+							{errors.password && errors.password.type === "required" && <p className="text-main-color">Please enter password</p>}
+							{errors.password && errors.password.type === "minLength" && <p className="text-main-color">Please enter minimum 6 characters</p> }
+							{errors.password && errors.password.type === "maxLength" && <p className="text-main-color">Please enter maximum 10 characters</p> }
 					</div>
-					<button type="submit" className="btn btn-md btn-primary full-width">Sign Up</button>
+					<button type="submit" className="btn btn-md btn-primary full-width" disabled={!isValid}>Sign Up</button>
 					<p>Already have an account? <Link to="/signin">Login Now!</Link> </p>
 				</form>
 			</div>
 		</div>
-		
-
 	</div>
     )
 }
