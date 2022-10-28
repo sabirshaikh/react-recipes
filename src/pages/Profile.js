@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
-import { useHistory, Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { authActions, layoutActions } from "../Store";
-import { asynLogin } from "../Store/authSlice";
+import { useHistory, Link, Route, Switch, useRouteMatch } from "react-router-dom";
+import { useSelector, useDispatch} from "react-redux";
+import { layoutActions } from "../Store";
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const Profile = () => {
@@ -12,7 +11,7 @@ const Profile = () => {
 	const dispatch = useDispatch();
 	const emailRef = useRef();
 	const passwordRef = useRef();
-	
+	const {path, url} = useRouteMatch();
 	useEffect(() => {
 		dispatch(layoutActions.setTitle('Profile'));
 		dispatch(layoutActions.setHeaderAlignment('text-center'));
@@ -110,27 +109,34 @@ const Profile = () => {
 
     return (
         <div className="container margin-bottom-100px">
-	
-		<div id="log-in" className="site-form log-in-form box-shadow border-radius-10">
+			<Link to={`${url}/password`}>password</Link>
+			<Link to={`${url}/email`}>email</Link>
 
-			<div className="form-output">
-				<form onSubmit={loginHandler}>
-					<div className="form-group label-floating">
-						<label className="control-label">Your Email</label>
-						<input className="form-control" placeholder="Enter Email" type="email" ref={emailRef}/>
-					</div>
-					<div className="form-group label-floating">
-						<label className="control-label">Your Password</label>
-						<input className="form-control" placeholder="Enter Pasword" type="password" ref={passwordRef} />
-					</div>
-					<button type="submit" className="btn btn-md btn-primary full-width">Sign Up</button>
-					<p>Already have an account? <Link to="/signin">Login Now!</Link> </p>
-				</form>
+				<Route path={`${path}/email`}>
+					<p>email</p>
+				</Route>
+				<Route path={`${path}/password`}>
+					<p>Pasword</p>
+				</Route>
+				
+        	
+			<div id="log-in" className="site-form log-in-form box-shadow border-radius-10">
+				<div className="form-output">
+					<form onSubmit={loginHandler}>
+						<div className="form-group label-floating">
+							<label className="control-label">Your Email</label>
+							<input className="form-control" placeholder="Enter Email" type="email" ref={emailRef}/>
+						</div>
+						<div className="form-group label-floating">
+							<label className="control-label">Your Password</label>
+							<input className="form-control" placeholder="Enter Pasword" type="password" ref={passwordRef} />
+						</div>
+						<button type="submit" className="btn btn-md btn-primary full-width">Sign Up</button>
+						<p>Already have an account? <Link to="/signin">Login Now!</Link> </p>
+					</form>
+				</div>
 			</div>
 		</div>
-		
-
-	</div>
     )
 }
 
