@@ -4,6 +4,7 @@ import Loading from "react-fullscreen-loading";
 import Routers from "./routes";
 import {useSelector, useDispatch} from 'react-redux';
 // import { authActions } from "./Store";
+import { layoutActions } from "./Store";
 import checkRequests from "./util/AxiosGlobal";
 function App() {
   const showLoader = useSelector(state => state.layoutReducer.showLoader);
@@ -28,12 +29,13 @@ function App() {
   //   }
   // };
 
-  // useEffect(() => {
-  //   window.addEventListener("storage", onStorageUpdate);
-  //   return () => {
-  //     window.removeEventListener("storage", onStorageUpdate);
-  //   };
-  // }, []);
+  useEffect(() => {
+    dispatch(layoutActions.showLoader(false))
+    // window.addEventListener("storage", onStorageUpdate);
+    // return () => {
+    //   window.removeEventListener("storage", onStorageUpdate);
+    // };
+  }, []);
 
 
   return (

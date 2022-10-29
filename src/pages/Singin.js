@@ -15,7 +15,7 @@ const Signin = () => {
 	const passwordRef = useRef();
 
 	const {
-        value: enteredemailValue,
+        value: enteredEmailValue,
         hasError: emailHasError,
         valueChangedHandler: emailChangedHandler,
         inputBlurHandler: emailBlurHandler,
@@ -24,7 +24,7 @@ const Signin = () => {
     } = useInput(value => value.trim() !== '');
 	
 	const {
-        value: enteredpasswordValue,
+        value: enteredPasswordValue,
         hasError: passwordHasError,
         valueChangedHandler: passwordChangedHandler,
         inputBlurHandler: passwordBlurHandler,
@@ -136,8 +136,6 @@ const Signin = () => {
         resetEmailValue();
 		resetPasswordValue();
         sendRequest();
-		
-		//dispatch(asynLogin());
 	}
 
     return (
@@ -152,9 +150,11 @@ const Signin = () => {
 						<InputControl 
 							className={`form-control ${emailHasError ? 'inValid' : ''}`}
 							placeholder="Enter Email" 
-							type="email" ref={emailRef} 
+							type="email" 
+							ref={emailRef} 
 							onChange={emailChangedHandler}
 							onBlur={emailBlurHandler}
+							value={enteredEmailValue}
 						/>
 						{emailHasError  && <p className="text-main-color mt-3">Please enter email</p>}
 					</div>
@@ -167,9 +167,11 @@ const Signin = () => {
 							ref={passwordRef} 
 							onChange={passwordChangedHandler}
 							onBlur={passwordBlurHandler}
+							value={enteredPasswordValue}
 						/>
 						{passwordHasError  && <p className="text-main-color mt-3">Please enter password</p>}
 					</div>
+					<Link to="/forgot-password">Forgot password?</Link>
 					<button type="submit" className="btn btn-md btn-primary full-width" disabled={!formIsValid}>Sign In</button>
 					<p>Don't you have an account? <Link to="/singup">Register Now!</Link> </p>
 				</form>

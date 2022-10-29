@@ -13,7 +13,7 @@ const InnerPageRoute = ({component: Component, ...props}) => {
     useEffect(() => {
         if(isProtected) {
             if(!isAuthenticated) {
-                history.push("/singup");
+                history.push("/signin");
             }
         }
     }, [isProtected, isAuthenticated]);

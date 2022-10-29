@@ -9,6 +9,7 @@ import InnerPageRoute from './InnerPageRoute';
 import MasterPageRoute from './MasterPageRoute';
 import AddRecipe from '../pages/AddRecipe';
 import Profile from '../pages/Profile';
+import ForgotPassword from '../pages/ForgotPassword';
 const Routers = () => {
     return (
         <Switch>
@@ -18,7 +19,8 @@ const Routers = () => {
             <InnerPageRoute path='/recipeDetails/:id' component={RecipeDetails} />
             <InnerPageRoute path='/singup' component={Signup} />
             <InnerPageRoute path='/signin' component={Signin} />
-            <InnerPageRoute path='/profile' component={Profile} />
+            <InnerPageRoute path='/profile' component={Profile} isProtected/>
+            <InnerPageRoute path='/forgot-password' component={ForgotPassword} />
             <InnerPageRoute path="/addrecipe" component={AddRecipe} isProtected/>
             <InnerPageRoute path="/*" component={NotFound} />
         </Switch>

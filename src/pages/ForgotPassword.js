@@ -5,21 +5,21 @@ import { layoutActions } from "../Store";
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { useForm } from "react-hook-form";
-import InputControl from "../components/UI/InputControl";
-const Signup = () => {
+
+const ForgotPassword = () => {
 	const MySwal = withReactContent(Swal)
 	const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const emailRef = useRef();
-	const passwordRef = useRef();
-	const { register, handleSubmit, formState: { errors, isValid }} = useForm({
+
+    const { register, handleSubmit, formState: { errors, isValid }} = useForm({
 		mode: 'all',
 		shouldUnregister: true,
   		reValidateMode: 'onChange',
 	});
 	useEffect(() => {
-		dispatch(layoutActions.setTitle('Sign Up'));
+		dispatch(layoutActions.setTitle('Forgot Password'));
 		dispatch(layoutActions.setHeaderAlignment('text-center'));
 	}, [dispatch])
 
@@ -29,21 +29,23 @@ const Signup = () => {
 		}
     }, [isAuthenticated])
 
+	console.log("Errors:", errors, isValid)
+
+
 	async function sendRequest(data) {
 		console.log("data:", data)
 		let errorMsg = 'Something went wrong!'
 		try {
 			dispatch(layoutActions.showLoader(true));
-		  	let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDRohny3ltD8ORRdQxLQfLCtyHgWRJjk9I';
+		  	let url = 'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyDRohny3ltD8ORRdQxLQfLCtyHgWRJjk9I';
 		  	const response = await fetch(url,{
 				method: 'POST',
 				body: JSON.stringify({
-					email: data.email,
-					password: data.password,
-					returnSecureToken: true
-				}),
+                    requestType: "PASSWORD_RESET",
+                    email: data.email
+                }),
 				headers: {
-				'Content-Type': 'application/json'
+				    'Content-Type': 'application/json'
 				}
 			})
 	
@@ -57,11 +59,7 @@ const Signup = () => {
 				Swal.fire({
 					icon: 'success',
 					title: 'Success',
-					text: 'Successfully sign up',
-					timer: 2000,
-					willClose: () => {
-						history.push("/signin");
-					}
+					text: 'Reset Password link has been sent to your email.'                    
 				})
 			//   const expireTime = new Date(new Date().getTime() + (10 * 1000))
 			//   authCtx.login(responseData.idToken, expireTime.toISOString() );
@@ -74,27 +72,11 @@ const Signup = () => {
 			dispatch(layoutActions.showLoader(false));
 			console.log("error in catch:", error.message)
 
-			if(error.message === 'INVALID_EMAIL') {
-				errorMsg = "Entered email is invalid"
+			if(error.message === 'EMAIL_NOT_FOUND') {
+				errorMsg = "Entered email is not found."
 			}
 			
-			if(error.message.includes('WEAK_PASSWORD')) {
-				errorMsg = "Password should be at least 6 characters"
-			}
-
-			if(error.message.includes('EMAIL_EXISTS')) {
-				errorMsg = "The email address is already in use by another account"
-			}
-
-			if(error.message.includes('OPERATION_NOT_ALLOWED')) { 
-				errorMsg = "Password sign-in is disabled for this project."
-			}
-
-			if(error.message.includes('TOO_MANY_ATTEMPTS_TRY_LATER')) { 
-				errorMsg = "We have blocked all requests from this device due to unusual activity. Try again later."
-			}
-			
-			console.log("sabir error:", error.message)
+            console.log("sabir error:", error.message)
 			
 		//   alert(error);
 		  	MySwal.fire({
@@ -107,9 +89,11 @@ const Signup = () => {
 	}
 
 	const loginHandler = (data) => {
+		console.log("data:", JSON.stringify(data));
+		console.log("email:", data.email);
+		console.log("password:", data.password);
 		sendRequest({
-			email: data.email,
-			password: data.password
+			email: data.email
 		});
 	}
 	
@@ -122,7 +106,7 @@ const Signup = () => {
 				<form onSubmit={handleSubmit(loginHandler)}>
 					<div className="form-group label-floating">
 						<label className="control-label">Your Email</label>
-						<InputControl className={`form-control ${errors.email && 'inValid'}`}
+						<input className={`form-control ${errors.email && 'inValid'}`}
 							placeholder="Enter Email" 
 							type="text" 
 							ref={emailRef} 
@@ -130,23 +114,11 @@ const Signup = () => {
 								required: "Email Address is required",
 								pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 							})}/>
+                        <small id="emailHelp" className="form-text text-muted">We'll send you the password reset link to your email.</small>
 						{errors.email && errors.email.type === "required" && <p className="text-main-color">Please enter email</p>}
 						{errors.email && errors.email.type === "pattern" && <p className="text-main-color">Please enter valid email</p> }
 					</div>
-					<div className="form-group label-floating">
-						<label className="control-label">Your Password</label>
-						<InputControl className={`form-control ${errors.password && 'inValid'}`}
-							placeholder="Enter Pasword" 
-							type="password" 
-							ref={passwordRef} 
-							{...register("password", 
-							{ required: true, maxLength: 10, minLength: 6 })}/>
-							{errors.password && errors.password.type === "required" && <p className="text-main-color">Please enter password</p>}
-							{errors.password && errors.password.type === "minLength" && <p className="text-main-color">Please enter minimum 6 characters</p> }
-							{errors.password && errors.password.type === "maxLength" && <p className="text-main-color">Please enter maximum 10 characters</p> }
-					</div>
-					<button type="submit" className="btn btn-md btn-primary full-width" disabled={!isValid}>Sign Up</button>
-					<p>Already have an account? <Link to="/signin">Login Now!</Link> </p>
+					<button type="submit" className="btn btn-md btn-primary full-width" disabled={!isValid}>Send Reset Link</button>
 				</form>
 			</div>
 		</div>
@@ -154,4 +126,4 @@ const Signup = () => {
     )
 }
 
-export default Signup;
+export default ForgotPassword;

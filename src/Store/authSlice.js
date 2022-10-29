@@ -26,6 +26,12 @@ const authSlice = createSlice({
                 text: 'Logout Successfully',
                 timer: 2000
             })
+        },
+        setToken(state, action) {
+            state.userToken = action.payload
+        },
+        setEmail(state, action) {
+            state.userInfo.email = action.payload
         }
     }
 });
