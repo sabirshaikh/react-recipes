@@ -2,12 +2,10 @@ import { useEffect, useRef } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions, layoutActions } from "../Store";
-import Swal from 'sweetalert2'
-import withReactContent from 'sweetalert2-react-content'
+import Swal from 'sweetalert2';
 import useInput from "../Hooks/useInput";
 import InputControl from "../components/UI/InputControl";
 const Signin = () => {
-	const MySwal = withReactContent(Swal)
 	const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
 	const history = useHistory();
 	const dispatch = useDispatch();
@@ -57,9 +55,9 @@ const Signin = () => {
 		  	const response = await fetch(url,{
 				method: 'POST',
 				body: JSON.stringify({
-				email: emailRef.current.value,
-				password: passwordRef.current.value,
-				returnSecureToken: true
+					email: emailRef.current.value,
+					password: passwordRef.current.value,
+					returnSecureToken: false
 				}),
 				headers: {
 				'Content-Type': 'application/json'
@@ -77,18 +75,15 @@ const Signin = () => {
 					icon: 'success',
 					title: 'Success',
 					text: 'Successfully sign In',
-					timer: 2000,
-					willClose: () => {
-						// history.push("/");
-					}
+					timer: 2000
 				})
-            dispatch(authActions.login({
-                token: responseData.idToken,
-                userInfo: {
-                    email: responseData.email,
-                    expiresIn: responseData.expiresIn
-                }
-            }));
+				dispatch(authActions.login({
+					token: responseData.idToken,
+					userInfo: {
+						email: responseData.email,
+						expiresIn: responseData.expiresIn
+					}
+				}));
 			//   const expireTime = new Date(new Date().getTime() + (10 * 1000))
 			//   authCtx.login(responseData.idToken, expireTime.toISOString() );
 			//   authCtx.userData(responseData);
@@ -117,7 +112,7 @@ const Signin = () => {
 			}
 			
 			console.log("sabir error:", error.message)
-		  	MySwal.fire({
+		  	Swal.fire({
 				icon: 'error',
 				title: 'Error',
 				text: errorMsg

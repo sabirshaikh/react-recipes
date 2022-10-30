@@ -1,17 +1,13 @@
 import React, {useEffect} from "react";
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
-const MySwal = withReactContent(Swal);
-
-
 const checkRequests= Wrapped => {
     function CheckRequests(props) {
         useEffect(()=>{
             axios.interceptors.request.use(function (config) {
                 return config;
             }, function (error) {
-                MySwal.fire({
+                Swal.fire({
                     icon: 'error',
                     title: 'Error',
                     text: error.message
@@ -23,7 +19,7 @@ const checkRequests= Wrapped => {
                 console.log("response:", response)
                 return response;
             }, function (error) {
-                MySwal.fire({
+                Swal.fire({
                     icon: 'error',
                     title: 'Error',
                     text: error.message

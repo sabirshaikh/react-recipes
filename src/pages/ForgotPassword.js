@@ -3,11 +3,9 @@ import { useHistory, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { layoutActions } from "../Store";
 import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 import { useForm } from "react-hook-form";
 
 const ForgotPassword = () => {
-	const MySwal = withReactContent(Swal)
 	const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
 	const history = useHistory();
 	const dispatch = useDispatch();
@@ -79,7 +77,7 @@ const ForgotPassword = () => {
             console.log("sabir error:", error.message)
 			
 		//   alert(error);
-		  	MySwal.fire({
+		  	Swal.fire({
 				icon: 'error',
 				title: 'Error',
 				text: errorMsg
