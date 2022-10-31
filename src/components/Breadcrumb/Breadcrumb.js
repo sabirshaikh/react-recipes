@@ -11,7 +11,7 @@ const Breadcrumb = () => {
     return (
         <ol className="breadcrumb opacity-5">
             <li><Link to="/">Home</Link></li>
-            <li className="active">{currentPath}</li>
+            {/* <li className="active">{currentPath}</li> */}
         </ol>
     )
 }
