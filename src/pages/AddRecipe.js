@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Prompt } from "react-router-dom";
 import { useForm, useFieldArray } from "react-hook-form";
 import axios from "axios";
 import { layoutActions } from "../Store";
@@ -12,7 +13,8 @@ const AddRecipe = () => {
         dispatch(layoutActions.setHeaderAlignment('text-left'));
     }, [])
 
-    const { register, handleSubmit, formState: { errors, isValid }, control, reset, setValue} = useForm({
+    
+    const { register, handleSubmit, formState: { errors, isValid, isDirty }, control, reset, setValue} = useForm({
 		mode: 'all',
 		shouldUnregister: false,
   		reValidateMode: 'onChange',
@@ -22,7 +24,26 @@ const AddRecipe = () => {
             nutrient: [{value: ''}]
         }
 	});
-    console.log("fields:", errors);
+
+    useEffect(() => {
+        const handler = (event) => {
+          event.preventDefault();
+          event.returnValue = "";
+        };
+        console.log("isDirty:", isDirty);
+        // if the form is NOT unchanged, then set the onbeforeunload
+        if (isDirty) {
+          window.addEventListener("beforeunload", handler);
+          // clean it up, if the dirty state changes
+          return () => {
+            window.removeEventListener("beforeunload", handler);
+          };
+        }
+        // since this is not dirty, don't do anything
+        return () => {};
+      }, [isDirty]);
+
+    
     const { fields: ingredientList, append: appendIngredients, remove: removeIngredients } = useFieldArray({
         control,
         name: "ingredient"
@@ -202,6 +223,10 @@ const AddRecipe = () => {
     return (
         <div className="container">
             <form onSubmit={handleSubmit(addRecipeHandler)}>
+                <Prompt
+                    when={isDirty}
+                    message={`Changes you made may not be saved.`}
+                />
                 <div className="margin-tb-45px full-width">
                     <h4 className="padding-lr-30px padding-tb-20px background-white box-shadow border-radius-10"><i className="far fa-list-alt margin-right-10px text-main-color"></i>Basic Informations</h4>
                     <div className="padding-30px padding-bottom-30px background-white border-radius-10">
