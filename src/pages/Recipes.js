@@ -13,7 +13,7 @@ const Category = () => {
     const [from, setFrom] = useState(0);
     const [recipesBlock, setRecipesBlock] = useState([]);
     const categoryName = params.id ? params.id.trim() : 'indian';
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(false);
     const showLoader = useSelector(state => state.layoutReducer.showLoader);
     const recipes = useSelector(state => state.recipeReducer.recipes);
     const currentCategory = useSelector(state => state.recipeReducer.currentCategory);
@@ -91,10 +91,11 @@ const Category = () => {
                     }))
                 }
                 dispatch(layoutActions.showLoader(false));
+                setError(false);
             })
             .catch((error)=> {
                 dispatch(layoutActions.showLoader(false));
-                setError(error.message);
+                setError(true);
             })
         } catch (error) {
             dispatch(layoutActions.showLoader(false));
@@ -149,11 +150,11 @@ const Category = () => {
             <div className="container margin-bottom-100px">
                 {error && <p>Something went wrong!</p>}
                 { recipesBlock.length === 0 && !showLoader && !error ? <p>{categoryName} Recipes Not Found, Please try again <Link to="/recipes" className="text-main-color">recipes</Link></p> : <div className="row">
-                    {recipesBlock}
+                    {!error && recipesBlock}
                 </div>
                 }
                 {   
-                   recipesBlock && <div className="text-center">
+                    !error && recipesBlock && <div className="text-center">
                         <button onClick={showMoreRecipesHandler} className="btn box-shadow margin-top-50px padding-tb-10px btn-sm border-2 border-radius-30 btn-inline-block width-210px background-second-color text-white">Show More Recipes</button>
                     </div>
                 }
