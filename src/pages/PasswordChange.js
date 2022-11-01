@@ -103,7 +103,7 @@ const PasswordChange = () => {
 				idToken: userToken,
 				password: data.password
 			},
-			successMessage: "Successfully change your password"
+			successMessage: "Successfully changed your password"
 		});
 	}
 

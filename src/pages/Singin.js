@@ -3,7 +3,7 @@ import { useHistory, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { authActions, layoutActions } from "../Store";
 import Swal from 'sweetalert2';
-import useInput from "../Hooks/useInput";
+import { useForm } from "react-hook-form";
 import InputControl from "../components/UI/InputControl";
 const Signin = () => {
 	const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
@@ -11,30 +11,11 @@ const Signin = () => {
 	const dispatch = useDispatch();
 	const emailRef = useRef();
 	const passwordRef = useRef();
-
-	const {
-        value: enteredEmailValue,
-        hasError: emailHasError,
-        valueChangedHandler: emailChangedHandler,
-        inputBlurHandler: emailBlurHandler,
-        isValid: enteredEmailValueIsValid,
-        reset: resetEmailValue
-    } = useInput(value => value.trim() !== '');
-	
-	const {
-        value: enteredPasswordValue,
-        hasError: passwordHasError,
-        valueChangedHandler: passwordChangedHandler,
-        inputBlurHandler: passwordBlurHandler,
-        isValid: enteredPasswordValueIsValid,
-        reset: resetPasswordValue
-    } = useInput(value => value.trim() !== '');
-
-
-	let formIsValid = false;
-    if (enteredEmailValueIsValid &&  enteredPasswordValueIsValid) {
-        formIsValid = true
-    }
+	const { register, handleSubmit, formState: { errors, isValid }} = useForm({
+		mode: 'all',
+		shouldUnregister: true,
+  		reValidateMode: 'onChange',
+	});
 
 	useEffect(() => {
 		dispatch(layoutActions.setTitle('Sing In'));
@@ -47,7 +28,7 @@ const Signin = () => {
 		}
     }, [isAuthenticated])
 
-	async function sendRequest() {
+	async function sendRequest(data) {
 		let errorMsg = 'couldn\'t sign in';
 		try {
 			dispatch(layoutActions.showLoader(true));
@@ -55,8 +36,8 @@ const Signin = () => {
 		  	const response = await fetch(url,{
 				method: 'POST',
 				body: JSON.stringify({
-					email: emailRef.current.value,
-					password: passwordRef.current.value,
+					email: data.email,
+					password: data.password,
 					returnSecureToken: false
 				}),
 				headers: {
@@ -119,56 +100,48 @@ const Signin = () => {
 				text: errorMsg
 			})
 		}
-	   
 	}
 
-	const loginHandler = (event) => {
-		event.preventDefault();
-        console.log("form is validated:", formIsValid)
-        if(!formIsValid) {
-            console.log("form is invalidated")
-            return;
-        } 
-        resetEmailValue();
-		resetPasswordValue();
-        sendRequest();
+	const loginHandler = (data) => {
+		sendRequest({
+			email: data.email,
+			password: data.password
+		});
 	}
 
     return (
         <div className="container margin-bottom-100px">
 	
 		<div id="log-in" className="site-form log-in-form box-shadow border-radius-10">
-
 			<div className="form-output">
-				<form onSubmit={loginHandler}>
+				<form onSubmit={handleSubmit(loginHandler)}>
 					<div className="form-group label-floating">
 						<label className="control-label">Your Email</label>
-						<InputControl 
-							className={`form-control ${emailHasError ? 'inValid' : ''}`}
+						<InputControl className={`form-control ${errors.email && 'inValid'}`}
 							placeholder="Enter Email" 
-							type="email" 
+							type="text" 
 							ref={emailRef} 
-							onChange={emailChangedHandler}
-							onBlur={emailBlurHandler}
-							value={enteredEmailValue}
-						/>
-						{emailHasError  && <p className="text-main-color mt-3">Please enter email</p>}
+							{...register("email", { 
+								required: "Email Address is required",
+								pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+							})}/>
+						{errors.email && errors.email.type === "required" && <p className="text-main-color">Please enter email</p>}
+						{errors.email && errors.email.type === "pattern" && <p className="text-main-color">Please enter valid email</p> }
 					</div>
 					<div className="form-group label-floating">
 						<label className="control-label">Your Password</label>
-						<InputControl 
-							className={`form-control ${passwordHasError ? 'inValid' : ''}`}
+						<InputControl className={`form-control ${errors.password && 'inValid'}`}
 							placeholder="Enter Pasword" 
 							type="password" 
 							ref={passwordRef} 
-							onChange={passwordChangedHandler}
-							onBlur={passwordBlurHandler}
-							value={enteredPasswordValue}
-						/>
-						{passwordHasError  && <p className="text-main-color mt-3">Please enter password</p>}
+							{...register("password", 
+							{ required: true, maxLength: 10, minLength: 6 })}/>
+							{errors.password && errors.password.type === "required" && <p className="text-main-color">Please enter password</p>}
+							{errors.password && errors.password.type === "minLength" && <p className="text-main-color">Please enter minimum 6 characters</p> }
+							{errors.password && errors.password.type === "maxLength" && <p className="text-main-color">Please enter maximum 10 characters</p> }
 					</div>
 					<Link to="/forgot-password">Forgot password?</Link>
-					<button type="submit" className="btn btn-md btn-primary full-width" disabled={!formIsValid}>Sign In</button>
+					<button type="submit" className="btn btn-md btn-primary full-width" disabled={!isValid}>Sign In</button>
 					<p>Don't you have an account? <Link to="/singup">Register Now!</Link> </p>
 				</form>
 			</div>
