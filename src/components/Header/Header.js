@@ -1,32 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import { Link } from "react-router-dom";
 import MainNavigation from "../MainNavigation/MainNavigation";
 import HeaderLink from "../MainNavigation/HeaderLink";
-
+import useWindowSize from "../../Hooks/useWindowSize";
 const Header = () => {
+    const {width: windowWidth} = useWindowSize();
     const [showNavigation, setShowNavigation] = useState(true);
     const toggleNavigation = (event) => {    
         event.preventDefault();
         setShowNavigation(prevState => prevState = !showNavigation);
     }
-
-    const checkWindowSize = () => {
-        if(window.innerWidth <= 991) {
-            setShowNavigation(false);
-        } else {
-            setShowNavigation(true);
-        }
-    }
-
     useEffect(() => {
-      if(window.innerWidth <= 991) {
+      console.log("window:", windowWidth)
+      if(windowWidth <= 991) {
           setShowNavigation(false);
-          window.addEventListener('resize', checkWindowSize);
+      } else {
+          setShowNavigation(true);
       }
-    }, [])
+    }, [windowWidth])
 
     return (
-      
         <header className="background-main-color">
             <div className="header-output">
               <div className="header-in">

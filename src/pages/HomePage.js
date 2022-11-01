@@ -6,7 +6,7 @@ import { layoutActions, recipeActions } from "../Store";
 import RecipeCard2 from "../components/RecipeCard/RecipeCard2";
 import CategoryCard from "../components/RecipeCategoryCard/CategoryCard";
 const HomePage = () => {
-  console.log("home page call");
+  
   const recipeCategory = useSelector(state => state.recipeReducer.recipeCategory)
   const dispatch = useDispatch();
   const recipes = useSelector(state => state.recipeReducer.recipes);
@@ -42,9 +42,9 @@ const HomePage = () => {
 
   useEffect(() => {
     let data = [];
-    console.log("recipes.length:", recipes)
+    
         data = recipes.map((data, i) => {
-          console.log("recipe data:", data.recipe)
+          
           if(i > 3) {
             return; 
           }

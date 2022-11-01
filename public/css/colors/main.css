@@ -74,8 +74,9 @@ header a.model-link span {
   background-color: #f44336; }
 
 header ul.nav-menu > li.active > a,
-header ul.nav-menu > li > a.active {
-  color: #00ffe5; }
+header ul.nav-menu > li > a.active,
+.header-link.active {
+  color: #00ffe5 !important; }
 header ul.nav-menu > li > a:hover {
   color: #00ffe5; }
 
