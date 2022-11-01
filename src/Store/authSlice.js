@@ -4,7 +4,8 @@ import Swal from 'sweetalert2'
 const initialState = {
     isAuthenticated: false,
     userInfo: null,
-    userToken: null
+    userToken: null,
+    userId: null
 }
 
 const authSlice = createSlice({
@@ -15,6 +16,7 @@ const authSlice = createSlice({
             state.isAuthenticated = !!action.payload.token;
             state.userToken = action.payload.token;
             state.userInfo = action.payload.userInfo;
+            state.userId = action.payload.userId;
         },
         logout(state) {
             state.isAuthenticated = !!state.token;

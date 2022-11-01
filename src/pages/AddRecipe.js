@@ -1,10 +1,12 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm, useFieldArray } from "react-hook-form";
+import axios from "axios";
 import { layoutActions } from "../Store";
+import Swal from "sweetalert2";
 const AddRecipe = () => {
 	const dispatch = useDispatch();
-    
+    const userId = useSelector(state => state.authReducer.userInfo?.userId);
     useEffect(() => {
         dispatch(layoutActions.setTitle('Add Recipe'));
         dispatch(layoutActions.setHeaderAlignment('text-left'));
@@ -155,12 +157,48 @@ const AddRecipe = () => {
             </div>
         )
     })
-
+    
     const addRecipeHandler = (data) => {
-        console.log("form data:", data)
-        reset()
+        try {
+            dispatch(layoutActions.showLoader(true))
+            console.log('api call:', `https://react-movie-52e5s1-default-rtdb.firebaseio.com/recipes/${userId}.json`)
+            axios.post(`https://react-movie-52e51-default-rtdb.firebaseio.com/recipes/${userId}.json`, data)
+            .then(res => {
+                if(res.status !== 200) {
+                    console.log("error:", res)
+                    throw new Error(res.error);
+                }
+                Swal.fire({
+					icon: 'success',
+					title: 'Success',
+					text: 'Recipe Successfully submitted',
+					timer: 2000
+				}).then(() => {
+                    reset()
+                })
+            })
+            .catch(err => {
+                dispatch(layoutActions.showLoader(false))
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: err.message
+                })
+                console.log("error:", err)
+            }).finally(() => {
+                dispatch(layoutActions.showLoader(false))
+            })
+        } catch (err) {
+            dispatch(layoutActions.showLoader(false))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: err.message
+            })
+            console.log("error:", err)
+        }
     }
-
+ 
     return (
         <div className="container">
             <form onSubmit={handleSubmit(addRecipeHandler)}>
@@ -182,7 +220,12 @@ const AddRecipe = () => {
                                     <div className="col-md-6">
                                         <div className="form-group margin-bottom-20px">
                                         <label><i className="far fa-images margin-right-10px"></i> Image URL</label>
-                                            <input type="text" className="form-control form-control-sm" placeholder="http://www./" />
+                                            <input type="text" className="form-control form-control-sm" placeholder="http://www./" 
+                                            {...register("recipeImage", 
+                                            { required: true,  minLength: 3})}
+                                        />
+                                        {errors.recipeImage && errors.recipeImage.type === "required" && <p className="text-main-color">Please enter Recipe image url</p>}
+                                        {errors.recipeImage && errors.recipeImage.type === "minLength" && <p className="text-main-color">Please enter minimum 3 characters</p> }
                                         </div>
                                     </div>      
                                 </div>

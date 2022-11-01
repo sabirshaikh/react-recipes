@@ -81,6 +81,7 @@ const Signin = () => {
 					token: responseData.idToken,
 					userInfo: {
 						email: responseData.email,
+						userId: responseData.localId,
 						expiresIn: responseData.expiresIn
 					}
 				}));
