@@ -83,7 +83,7 @@ const AddRecipe = () => {
                         <input type="text" 
                             defaultValue={data.value} 
                             onChange={(e) => ingredientChangeHandler(e, index)} 
-                            className="form-control form-control-sm" 
+                            className={`form-control form-control-sm ${errors.ingredient && errors.ingredient[index] && 'inValid'}`}
                             key={data.id}
                             control={control}
                             {...register(`ingredient[${index}].value`, 
@@ -111,7 +111,7 @@ const AddRecipe = () => {
                     <input type="text" 
                             defaultValue={data.value} 
                             onChange={(e) => stepChangeHandler(e, index)} 
-                            className="form-control form-control-sm" 
+                            className={`form-control form-control-sm ${errors.step && errors.step[index] && 'inValid'}`}
                             key={data.id}
                             control={control}
                             {...register(`step[${index}].value`, 
@@ -139,7 +139,7 @@ const AddRecipe = () => {
                     <input type="text" 
                             defaultValue={data.value} 
                             onChange={(e) => stepChangeHandler(e, index)} 
-                            className="form-control form-control-sm" 
+                            className={`form-control form-control-sm ${errors.nutrient && errors.nutrient[index] && 'inValid'}`}
                             key={data.id}
                             control={control}
                             {...register(`nutrient[${index}].value`, 
@@ -210,7 +210,7 @@ const AddRecipe = () => {
                                 <div className="row">
                                     <div className="col-md-6">
                                     <label><i className="far fa-list-alt margin-right-10px"></i> Recipe Title</label>
-                                        <input type="text" className="form-control form-control-sm" placeholder="Recipe Title" 
+                                        <input type="text" className={`form-control form-control-sm ${errors.recipeTitle && 'inValid'}`} placeholder="Recipe Title" 
                                             {...register("recipeTitle", 
                                             { required: true,  minLength: 3})}
                                         />
@@ -220,7 +220,7 @@ const AddRecipe = () => {
                                     <div className="col-md-6">
                                         <div className="form-group margin-bottom-20px">
                                         <label><i className="far fa-images margin-right-10px"></i> Image URL</label>
-                                            <input type="text" className="form-control form-control-sm" placeholder="http://www./" 
+                                            <input type="text" className={`form-control form-control-sm ${errors.recipeImage && 'inValid'}`} placeholder="http://www./" 
                                             {...register("recipeImage", 
                                             { required: true,  minLength: 3})}
                                         />
@@ -246,7 +246,7 @@ const AddRecipe = () => {
                                     <div className="col-md-4">
                                         <div className="form-group margin-bottom-20px">
                                             <label>Cuisine Type</label>
-                                            <input type="text" className="form-control form-control-sm"
+                                            <input type="text" className={`form-control form-control-sm ${errors.recipeCuisine && 'inValid'}`}
                                                 {...register("recipeCuisine", 
 							                    { required: true,  minLength: 3})}
                                             />
@@ -257,7 +257,7 @@ const AddRecipe = () => {
                                     <div className="col-md-4">
                                         <div className="form-group margin-bottom-20px">
                                             <label>Meal Type</label>
-                                            <input type="text" className="form-control form-control-sm"
+                                            <input type="text" className={`form-control form-control-sm ${errors.recipeMeal && 'inValid'}`}
                                                 {...register("recipeMeal", 
 							                    { required: true,  minLength: 3})}
                                             />
@@ -273,7 +273,7 @@ const AddRecipe = () => {
                                     <div className="col-md-4">
                                         <div className="form-group margin-bottom-20px">
                                             <label>Diet Type</label>
-                                            <input type="text" className="form-control form-control-sm"
+                                            <input type="text" className={`form-control form-control-sm ${errors.recipeDiet && 'inValid'}`}
                                                 {...register("recipeDiet", 
 							                    { required: true,  minLength: 3})}
                                             />
@@ -285,7 +285,7 @@ const AddRecipe = () => {
                                     <div className="col-md-4">
                                         <div className="form-group margin-bottom-20px">
                                             <label>Total Weight (g)</label>
-                                            <input type="text" className="form-control form-control-sm"
+                                            <input type="text" className={`form-control form-control-sm ${errors.recipeWeight && 'inValid'}`}
                                                 {...register("recipeWeight", 
 							                    { required: true, pattern: /^\d*$/})}
                                             />
@@ -296,7 +296,7 @@ const AddRecipe = () => {
                                     <div className="col-md-4">
                                         <div className="form-group margin-bottom-20px">
                                             <label>Total Calories (Kcal)</label>
-                                            <input type="text" className="form-control form-control-sm"
+                                            <input type="text" className={`form-control form-control-sm ${errors.recipeCalories && 'inValid'}`}
                                                 {...register("recipeCalories", 
 							                    { required: true, pattern: /^\d*$/})}
                                             />
@@ -312,7 +312,7 @@ const AddRecipe = () => {
                                     <div className="col-md-4">
                                         <div className="form-group margin-bottom-20px">
                                             <label><i className="fas fa-users"></i> Servings</label>
-                                            <input type="text" className="form-control form-control-sm"
+                                            <input type="text" className={`form-control form-control-sm ${errors.recipeServings && 'inValid'}`}
                                                 {...register("recipeServings", 
 							                    { required: true, pattern: /^\d*$/})}
                                             />
@@ -331,7 +331,7 @@ const AddRecipe = () => {
                         <div className="row">
                             {ingredients}
                             <div className="col-12">
-                                <button type="button"className="btn btn-md btn-primary ba-1" onClick={addIngredient}>+ Add</button>
+                                <button type="button"className="btn btn-md btn-primary ba-1" onClick={addIngredient}>+ Add more</button>
                             </div>
                         </div>
                     </div>
@@ -343,7 +343,7 @@ const AddRecipe = () => {
                         <div className="row">
                             {steps}
                             <div className="col-12">
-                                <button type="button"className="btn btn-md btn-primary ba-1" onClick={addStep}>+ Add</button>
+                                <button type="button"className="btn btn-md btn-primary ba-1" onClick={addStep}>+ Add more</button>
                             </div>
                         </div>
                     </div>
@@ -355,7 +355,7 @@ const AddRecipe = () => {
                         <div className="row">
                             {nutrients}
                             <div className="col-12">
-                                <button type="button" className="btn btn-md btn-primary ba-1" onClick={addNutrient}>+ Add</button>
+                                <button type="button" className="btn btn-md btn-primary ba-1" onClick={addNutrient}>+ Add more</button>
                             </div>
                         </div>
                     </div>
