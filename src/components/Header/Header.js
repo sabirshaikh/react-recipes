@@ -11,7 +11,6 @@ const Header = () => {
         setShowNavigation(prevState => prevState = !showNavigation);
     }
     useEffect(() => {
-      console.log("window:", windowWidth)
       if(windowWidth <= 991) {
           setShowNavigation(false);
       } else {

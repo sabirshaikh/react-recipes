@@ -41,9 +41,7 @@ function App() {
   return (
     <Fragment>
       <Loading loading={showLoader} background="#ffffffb3" loaderColor="#b1b1b1" />
-      <React.StrictMode>
         <Routers />
-      </React.StrictMode>
     </Fragment>
   );
 }

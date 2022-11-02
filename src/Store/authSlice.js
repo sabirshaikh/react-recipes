@@ -22,6 +22,7 @@ const authSlice = createSlice({
             state.isAuthenticated = !!state.token;
             state.userInfo = null;
             state.userToken = null;
+            state.userId = null;
             Swal.fire({
                 icon: 'success',
                 title: 'Logout',

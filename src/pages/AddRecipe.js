@@ -195,7 +195,7 @@ const AddRecipe = () => {
 					text: 'Recipe Successfully submitted',
 					timer: 2000
 				}).then(() => {
-                    reset()
+                    reset();
                 })
             })
             .catch(err => {

@@ -42,7 +42,6 @@ const HomePage = () => {
 
   useEffect(() => {
     let data = [];
-    
         data = recipes.map((data, i) => {
           
           if(i > 3) {
@@ -53,7 +52,7 @@ const HomePage = () => {
                   <RecipeCard2 
                     key={'recipeCard' + i} 
                     recipeName={data.recipe.label} 
-                    recipeUrl={data.recipe.uri}
+                    recipeUrl={`/recipeDetails/${encodeURIComponent(data.recipe.uri)}`}
                     recipeImage={data.recipe.image}
                     recipeServing={data.recipe.yield} 
                     rating={ Math.floor(Math.random() * (5 - 1 + 1)) + 1} 
