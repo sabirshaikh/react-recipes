@@ -5,7 +5,6 @@ import Swal from 'sweetalert2';
 import { useForm } from "react-hook-form";
 const PasswordChange = () => {
 	const authState = useSelector(state => state.authReducer);
-	console.log("authState:",authState )
 	const userToken =  useSelector(state => state.authReducer.userToken);
 	const dispatch = useDispatch();
 	const passwordRef = useRef();
@@ -17,7 +16,6 @@ const PasswordChange = () => {
 	});
 
     async function sendRequest(data) {
-		console.log("data:", data)
 		let errorMsg = 'Something went wrong!'
 		try {
 			dispatch(layoutActions.showLoader(true));
@@ -31,7 +29,6 @@ const PasswordChange = () => {
 			})
 	
 			const responseData = await response.json();
-			console.log("error:", responseData)
 			if(!response.ok) {
 			  console.log("error:", responseData)
 			  throw new Error(responseData.error.message);
@@ -46,7 +43,6 @@ const PasswordChange = () => {
 			
 				dispatch(authActions.setToken(responseData.idToken))
 				dispatch(authActions.setEmail(responseData.email))
-			  	console.log("localId:", responseData)
 			}
 			dispatch(layoutActions.showLoader(false));
 		} catch (error) {
@@ -80,11 +76,8 @@ const PasswordChange = () => {
                     dispatch(authActions.logout())
                 })
 			}
-			
-            console.log("sabir error:", error.message)
-			
-		//   alert(error);
-		  	Swal.fire({
+
+			Swal.fire({
 				icon: 'error',
 				title: 'Error',
 				text: errorMsg

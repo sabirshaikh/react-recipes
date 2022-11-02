@@ -29,7 +29,6 @@ const EmailChange = () => {
 			})
 	
 			const responseData = await response.json();
-			// console.log("response:", responseData)
 			if(!response.ok) {
 			  throw new Error(responseData.error.message);
 			}
@@ -45,7 +44,6 @@ const EmailChange = () => {
                     dispatch(authActions.setToken(responseData.idToken))
                 }
                 dispatch(authActions.setEmail(responseData.email));
-			  	console.log("localId:", responseData)
 			}
 			dispatch(layoutActions.showLoader(false));
 		} catch (error) {
@@ -80,11 +78,9 @@ const EmailChange = () => {
                     dispatch(authActions.logout())
                 })
 			}
-			
             console.log("sabir error:", error.message)
-			
-		//   alert(error);
-            Swal.fire({
+
+			Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 text: errorMsg,

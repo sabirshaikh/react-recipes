@@ -28,7 +28,6 @@ const Signup = () => {
     }, [isAuthenticated])
 
 	async function sendRequest(data) {
-		console.log("data:", data)
 		let errorMsg = 'Something went wrong!'
 		try {
 			dispatch(layoutActions.showLoader(true));
@@ -61,11 +60,6 @@ const Signup = () => {
 						history.push("/signin");
 					}
 				})
-			//   const expireTime = new Date(new Date().getTime() + (10 * 1000))
-			//   authCtx.login(responseData.idToken, expireTime.toISOString() );
-			//   authCtx.userData(responseData);
-			//   history.replace("/");
-			  console.log("localId:", responseData.expiresIn)
 			}
 			dispatch(layoutActions.showLoader(false));
 		} catch (error) {
@@ -91,11 +85,8 @@ const Signup = () => {
 			if(error.message.includes('TOO_MANY_ATTEMPTS_TRY_LATER')) { 
 				errorMsg = "We have blocked all requests from this device due to unusual activity. Try again later."
 			}
-			
-			console.log("sabir error:", error.message)
-			
-		//   alert(error);
-		  	Swal.fire({
+
+			Swal.fire({
 				icon: 'error',
 				title: 'Error',
 				text: errorMsg

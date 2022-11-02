@@ -108,12 +108,10 @@ const Category = () => {
 
     const searchHandler = (e) => {
         e.preventDefault();
-        console.log("form is validated:", formIsValid)
         if(!formIsValid) {
             console.log("form is invalidated")
             return;
         } 
-        console.log('redirect ')
         resetSearchValue();
         history.push(`/recipes/${searchControlRef.current.value}`)
 

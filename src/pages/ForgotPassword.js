@@ -27,11 +27,7 @@ const ForgotPassword = () => {
 		}
     }, [isAuthenticated])
 
-	console.log("Errors:", errors, isValid)
-
-
 	async function sendRequest(data) {
-		console.log("data:", data)
 		let errorMsg = 'Something went wrong!'
 		try {
 			dispatch(layoutActions.showLoader(true));
@@ -59,11 +55,6 @@ const ForgotPassword = () => {
 					title: 'Success',
 					text: 'Reset Password link has been sent to your email.'                    
 				})
-			//   const expireTime = new Date(new Date().getTime() + (10 * 1000))
-			//   authCtx.login(responseData.idToken, expireTime.toISOString() );
-			//   authCtx.userData(responseData);
-			//   history.replace("/");
-			  console.log("localId:", responseData.expiresIn)
 			}
 			dispatch(layoutActions.showLoader(false));
 		} catch (error) {
@@ -73,10 +64,6 @@ const ForgotPassword = () => {
 			if(error.message === 'EMAIL_NOT_FOUND') {
 				errorMsg = "Entered email is not found."
 			}
-			
-            console.log("sabir error:", error.message)
-			
-		//   alert(error);
 		  	Swal.fire({
 				icon: 'error',
 				title: 'Error',
@@ -87,9 +74,6 @@ const ForgotPassword = () => {
 	}
 
 	const loginHandler = (data) => {
-		console.log("data:", JSON.stringify(data));
-		console.log("email:", data.email);
-		console.log("password:", data.password);
 		sendRequest({
 			email: data.email
 		});

@@ -30,11 +30,8 @@ const AddRecipe = () => {
           event.preventDefault();
           event.returnValue = "";
         };
-        console.log("isDirty:", isDirty);
-        // if the form is NOT unchanged, then set the onbeforeunload
         if (isDirty) {
           window.addEventListener("beforeunload", handler);
-          // clean it up, if the dirty state changes
           return () => {
             window.removeEventListener("beforeunload", handler);
           };
@@ -182,11 +179,9 @@ const AddRecipe = () => {
     const addRecipeHandler = (data) => {
         try {
             dispatch(layoutActions.showLoader(true))
-            console.log('api call:', `https://react-movie-52e5s1-default-rtdb.firebaseio.com/recipes/${userId}.json`)
             axios.post(`https://react-movie-52e51-default-rtdb.firebaseio.com/recipes/${userId}.json`, data)
             .then(res => {
                 if(res.status !== 200) {
-                    console.log("error:", res)
                     throw new Error(res.error);
                 }
                 Swal.fire({

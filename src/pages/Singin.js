@@ -92,9 +92,8 @@ const Signin = () => {
             if(error.message.includes('TOO_MANY_ATTEMPTS_TRY_LATER')) { 
 				errorMsg = "We have blocked all requests from this device due to unusual activity. Try again later."
 			}
-			
-			console.log("sabir error:", error.message)
-		  	Swal.fire({
+
+			Swal.fire({
 				icon: 'error',
 				title: 'Error',
 				text: errorMsg

@@ -33,11 +33,9 @@ const MyRecipeDetails = () => {
     const fetchRecipeDetails = useCallback((id) => {
         dispatch(layoutActions.showLoader(true));
         let apiCall = `https://react-movie-52e51-default-rtdb.firebaseio.com/recipes/${userId}/${id}.json`;
-        console.log("api call:", apiCall)
         try {
             axios.get(apiCall)
             .then((res)=> {
-                console.log("res:", res.data);
                 if(res.status === 200) {
                     if(res.data.length === 0){
                         history.replace("/404")
@@ -61,7 +59,6 @@ const MyRecipeDetails = () => {
     let nutrientsList = [];
     if (recipeData) {
         Object.entries(recipeData.nutrient).forEach(([key, value]) => {
-            console.log("value:",key, value['value'] )
             nutrientsList.push(<li key={key + 'list'}><span className="text-main-color">{value['value']}</span></li>);
         });
     }
@@ -69,7 +66,6 @@ const MyRecipeDetails = () => {
     let ingredientList = [];
     if (recipeData) {
         Object.entries(recipeData.ingredient).forEach(([key, value]) => {
-            console.log("value:",key, value['value'] )
             ingredientList.push(<li key={key + 'list'}><span className="text-main-color">{value['value']}</span></li>);
         });
     }
@@ -77,7 +73,6 @@ const MyRecipeDetails = () => {
     let stepList = [];
     if (recipeData) {
         Object.entries(recipeData.step).forEach(([key, value]) => {
-            console.log("value:",key, value['value'] )
             stepList.push(<li key={key + 'list'}><span className="text-main-color">{value['value']}</span></li>);
         });
     }
@@ -85,11 +80,9 @@ const MyRecipeDetails = () => {
     const deleteHandler = useCallback(() => {
         dispatch(layoutActions.showLoader(true));
         let apiCall = `https://react-movie-52e51-default-rtdb.firebaseio.com/recipes/${userId}/${params.id}.json`;
-        console.log("api call:", apiCall)
         try {
             axios.delete(apiCall)
             .then((res)=> {
-                console.log("res:", res.data);
                 if(res.status === 200) {
                     Swal.fire({
                         icon: 'success',

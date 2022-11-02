@@ -11,32 +11,9 @@ function App() {
 
   const location = useLocation();
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem("userData")) || '';  
-  //   user.loggedIn ? ctx.login() : ctx.logout();
-  // }, [location])
-
-  // const onStorageUpdate = (e) => {
-  //   if (e.key === 'persist:recipeStore') {
-  //     const newValue = JSON.parse(e.newValue);
-  //     const authReducer = JSON.parse(newValue.authReducer);
-  //     console.log("strage old value:", authReducer.isAuthenticated)
-  //     if(authReducer.isAuthenticated) {
-  //       dispatch(authActions.login())
-  //     } else {
-  //       dispatch(authActions.logout())
-  //     }
-  //   }
-  // };
-
   useEffect(() => {
     dispatch(layoutActions.showLoader(false))
-    // window.addEventListener("storage", onStorageUpdate);
-    // return () => {
-    //   window.removeEventListener("storage", onStorageUpdate);
-    // };
   }, []);
-
 
   return (
     <Fragment>
