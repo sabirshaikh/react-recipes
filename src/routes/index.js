@@ -14,6 +14,7 @@ const AddRecipe = lazy(() => import('../pages/AddRecipe'));
 const Profile = lazy(() => import('../pages/Profile'));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword'));
 const MyRecipes = lazy(() => import('../pages/MyRecipes'));
+const MyRecipeDetails = lazy(() => import('../pages/MyRecipeDetails'));
 
 const Routers = () => {
     return (
@@ -31,6 +32,7 @@ const Routers = () => {
                 <InnerPageRoute path='/forgot-password' component={ForgotPassword} />
                 <InnerPageRoute path="/addrecipe" component={AddRecipe} isProtected/>
                 <InnerPageRoute path="/myRecipes" component={MyRecipes} isProtected/>
+                <InnerPageRoute path="/myRecipeDetails/:id" component={MyRecipeDetails} isProtected/>
                 <InnerPageRoute path="*" component={NotFound} />
             </Switch>
         </Suspense>

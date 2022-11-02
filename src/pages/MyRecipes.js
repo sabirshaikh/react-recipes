@@ -69,7 +69,7 @@ const MyRecipes = () => {
                             <div key={key[0]} className="col-xl-3 col-lg-4 col-md-6 recipe-item margin-bottom-40px">
                                 <RecipeCard2 
                                     recipeName={key[1]['recipeTitle']}
-                                    recipeUrl={`MyRecipes/${key[0]}`}
+                                    recipeUrl={`myRecipeDetails/${key[0]}`}
                                     recipeImage={`/img/cat-2.jpg`}
                                     recipeServing={key[1]['recipeServings']} 
                                 />

@@ -24,7 +24,7 @@ const RecipeDetails = () => {
         fetchRecipeDetails(params.id);
     }, [params.id]);
 
-    const fetchRecipeDetails = useCallback((showMore) => {
+    const fetchRecipeDetails = useCallback(() => {
         dispatch(layoutActions.showLoader(true));
         let apiCall = `https://api.edamam.com/search?r=${params.id}&app_key=21b0439f73d40762540d12bb2dcccc9d&app_id=87dc6b39&imageSize=LARGE`;
         try {
