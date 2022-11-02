@@ -1,5 +1,5 @@
 import React, {Suspense, lazy} from 'react';
-import { Switch } from 'react-router-dom';
+import { Switch, BrowserRouter } from 'react-router-dom';
 import Loading from "react-fullscreen-loading";
 
 const HomePage = lazy(() => import('../pages/HomePage'));
@@ -15,22 +15,24 @@ const Profile = lazy(() => import('../pages/Profile'));
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword'));
 const Routers = () => {
     return (
-        <Switch>
-            <Suspense fallback={
-                <Loading loading={true} background="#ffffffb3" loaderColor="#b1b1b1" />
-            }>
-                <MasterPageRoute path='/' exact component={HomePage}/>
-                <InnerPageRoute path='/recipes' exact component={Recipes} />
-                <InnerPageRoute path='/recipes/:id' component={Recipes} />
-                <InnerPageRoute path='/recipeDetails/:id' component={RecipeDetails} />
-                <InnerPageRoute path='/singup' component={Signup} />
-                <InnerPageRoute path='/signin' component={Signin} />
-                <InnerPageRoute path='/profile' component={Profile} isProtected/>
-                <InnerPageRoute path='/forgot-password' component={ForgotPassword} />
-                <InnerPageRoute path="/addrecipe" component={AddRecipe} isProtected/>
-                <InnerPageRoute path="/*" component={NotFound} />
-            </Suspense>
-        </Switch>
+        <Suspense fallback={
+            <Loading loading={true} background="#ffffffb3" loaderColor="#b1b1b1" />
+        }>
+            <BrowserRouter>
+                <Switch>
+                    <MasterPageRoute path='/' exact component={HomePage}/>
+                    <InnerPageRoute path='/recipes' component={Recipes} />
+                    <InnerPageRoute path='/recipes/:id' component={Recipes} />
+                    <InnerPageRoute path='/recipeDetails/:id' component={RecipeDetails} />
+                    <InnerPageRoute path='/singup' component={Signup} />
+                    <InnerPageRoute path='/signin' component={Signin} />
+                    <InnerPageRoute path='/profile' component={Profile} isProtected/>
+                    <InnerPageRoute path='/forgot-password' component={ForgotPassword} />
+                    <InnerPageRoute path="/addrecipe" component={AddRecipe} isProtected/>
+                    <InnerPageRoute path="*" component={NotFound} />
+                </Switch>
+            </BrowserRouter>
+        </Suspense>
     )
 };
 
