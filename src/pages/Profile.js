@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useHistory, NavLink, Route, useRouteMatch } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { layoutActions } from "../Store";
+import { Helmet } from "react-helmet";
 import EmailChange from "./EmailChange";
 import PasswordChange from "./PasswordChange";
 const Profile = () => {
@@ -25,6 +26,9 @@ const Profile = () => {
 
     return (
         <div className="container margin-bottom-100px">
+			<Helmet>
+				<title>Cook Note - Food Recipes</title>
+			</Helmet>
 			<ul className="nav nav-pills justify-content-center margin-bottom-20px">
 				<li className="nav-item">
 					<NavLink className="nav-link" activeClassName="active" to={`${url}/change-email`}>Change Email</NavLink>

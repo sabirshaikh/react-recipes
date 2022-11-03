@@ -1,8 +1,9 @@
 import { useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { authActions, layoutActions } from "../Store";
 import Swal from 'sweetalert2';
 import { useForm } from "react-hook-form";
+import { authActions, layoutActions } from "../Store";
+import { Helmet } from "react-helmet";
 const PasswordChange = () => {
 	const authState = useSelector(state => state.authReducer);
 	const userToken =  useSelector(state => state.authReducer.userToken);
@@ -102,6 +103,9 @@ const PasswordChange = () => {
 
     return (
         <div className="site-form log-in-form box-shadow border-radius-10">
+			<Helmet>
+				<title>Password Change | Cook Note</title>
+			</Helmet>
             <div className="form-output">
                 <form onSubmit={handlePasswordSubmit(passwordChangeHandler)}>
                     <div className="form-group label-floating">

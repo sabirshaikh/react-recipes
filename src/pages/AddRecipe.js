@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Prompt } from "react-router-dom";
 import { useForm, useFieldArray } from "react-hook-form";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 import { layoutActions } from "../Store";
 import Swal from "sweetalert2";
 const AddRecipe = () => {
@@ -217,6 +218,9 @@ const AddRecipe = () => {
  
     return (
         <div className="container">
+            <Helmet>
+				<title>Cook Note - Add recipe</title>
+			</Helmet>
             <form onSubmit={handleSubmit(addRecipeHandler)}>
                 <Prompt
                     when={isDirty}

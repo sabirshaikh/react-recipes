@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { authActions, layoutActions } from "../Store";
 import Swal from 'sweetalert2';
 import { useForm } from "react-hook-form";
+import { Helmet } from "react-helmet";
 import InputControl from "../components/UI/InputControl";
 const Signin = () => {
 	const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
@@ -18,7 +19,7 @@ const Signin = () => {
 	});
 
 	useEffect(() => {
-		dispatch(layoutActions.setTitle('Sing In'));
+		dispatch(layoutActions.setTitle('Sign In'));
 		dispatch(layoutActions.setHeaderAlignment('text-center'));
 	}, [])
 
@@ -109,43 +110,45 @@ const Signin = () => {
 	}
 
     return (
-        <div className="container margin-bottom-100px">
-	
-		<div id="log-in" className="site-form log-in-form box-shadow border-radius-10">
-			<div className="form-output">
-				<form onSubmit={handleSubmit(loginHandler)}>
-					<div className="form-group label-floating">
-						<label className="control-label">Your Email</label>
-						<InputControl className={`form-control ${errors.email && 'inValid'}`}
-							placeholder="Enter Email" 
-							type="text" 
-							ref={emailRef} 
-							{...register("email", { 
-								required: "Email Address is required",
-								pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-							})}/>
-						{errors.email && errors.email.type === "required" && <p className="text-main-color">Please enter email</p>}
-						{errors.email && errors.email.type === "pattern" && <p className="text-main-color">Please enter valid email</p> }
-					</div>
-					<div className="form-group label-floating">
-						<label className="control-label">Your Password</label>
-						<InputControl className={`form-control ${errors.password && 'inValid'}`}
-							placeholder="Enter Pasword" 
-							type="password" 
-							ref={passwordRef} 
-							{...register("password", 
-							{ required: true, maxLength: 10, minLength: 6 })}/>
-							{errors.password && errors.password.type === "required" && <p className="text-main-color">Please enter password</p>}
-							{errors.password && errors.password.type === "minLength" && <p className="text-main-color">Please enter minimum 6 characters</p> }
-							{errors.password && errors.password.type === "maxLength" && <p className="text-main-color">Please enter maximum 10 characters</p> }
-					</div>
-					<Link to="/forgot-password">Forgot password?</Link>
-					<button type="submit" className="btn btn-md btn-primary full-width" disabled={!isValid}>Sign In</button>
-					<p>Don't you have an account? <Link to="/singup">Register Now!</Link> </p>
-				</form>
+		<div className="container margin-bottom-100px">
+			<Helmet>
+				<title>Sign In | Cook Note - Food Recipes</title>
+			</Helmet>
+			<div id="log-in" className="site-form log-in-form box-shadow border-radius-10">
+				<div className="form-output">
+					<form onSubmit={handleSubmit(loginHandler)}>
+						<div className="form-group label-floating">
+							<label className="control-label">Your Email</label>
+							<InputControl className={`form-control ${errors.email && 'inValid'}`}
+								placeholder="Enter Email" 
+								type="text" 
+								ref={emailRef} 
+								{...register("email", { 
+									required: "Email Address is required",
+									pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+								})}/>
+							{errors.email && errors.email.type === "required" && <p className="text-main-color">Please enter email</p>}
+							{errors.email && errors.email.type === "pattern" && <p className="text-main-color">Please enter valid email</p> }
+						</div>
+						<div className="form-group label-floating">
+							<label className="control-label">Your Password</label>
+							<InputControl className={`form-control ${errors.password && 'inValid'}`}
+								placeholder="Enter Pasword" 
+								type="password" 
+								ref={passwordRef} 
+								{...register("password", 
+								{ required: true, maxLength: 10, minLength: 6 })}/>
+								{errors.password && errors.password.type === "required" && <p className="text-main-color">Please enter password</p>}
+								{errors.password && errors.password.type === "minLength" && <p className="text-main-color">Please enter minimum 6 characters</p> }
+								{errors.password && errors.password.type === "maxLength" && <p className="text-main-color">Please enter maximum 10 characters</p> }
+						</div>
+						<Link to="/forgot-password">Forgot password?</Link>
+						<button type="submit" className="btn btn-md btn-primary full-width" disabled={!isValid}>Sign In</button>
+						<p>Don't you have an account? <Link to="/singup">Register Now!</Link> </p>
+					</form>
+				</div>
 			</div>
 		</div>
-	</div>
     )
 }
 

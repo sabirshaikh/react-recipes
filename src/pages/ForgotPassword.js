@@ -1,8 +1,9 @@
 import { useEffect, useRef } from "react";
 import { useHistory, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { layoutActions } from "../Store";
 import Swal from 'sweetalert2';
+import { Helmet } from "react-helmet";
+import { layoutActions } from "../Store";
 import { useForm } from "react-hook-form";
 
 const ForgotPassword = () => {
@@ -80,31 +81,33 @@ const ForgotPassword = () => {
 	}
 	
     return (
-        <div className="container margin-bottom-100px">
-	
-		<div id="log-in" className="site-form log-in-form box-shadow border-radius-10">
+		<div className="container margin-bottom-100px">
+			<Helmet>
+				<title>Cook Note - Forgot Password</title>
+			</Helmet>
+			<div id="log-in" className="site-form log-in-form box-shadow border-radius-10">
 
-			<div className="form-output">
-				<form onSubmit={handleSubmit(loginHandler)}>
-					<div className="form-group label-floating">
-						<label className="control-label">Your Email</label>
-						<input className={`form-control ${errors.email && 'inValid'}`}
-							placeholder="Enter Email" 
-							type="text" 
-							ref={emailRef} 
-							{...register("email", { 
-								required: "Email Address is required",
-								pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-							})}/>
-                        <small id="emailHelp" className="form-text text-muted">We'll send you the password reset link to your email.</small>
-						{errors.email && errors.email.type === "required" && <p className="text-main-color">Please enter email</p>}
-						{errors.email && errors.email.type === "pattern" && <p className="text-main-color">Please enter valid email</p> }
-					</div>
-					<button type="submit" className="btn btn-md btn-primary full-width" disabled={!isValid}>Send Reset Link</button>
-				</form>
+				<div className="form-output">
+					<form onSubmit={handleSubmit(loginHandler)}>
+						<div className="form-group label-floating">
+							<label className="control-label">Your Email</label>
+							<input className={`form-control ${errors.email && 'inValid'}`}
+								placeholder="Enter Email" 
+								type="text" 
+								ref={emailRef} 
+								{...register("email", { 
+									required: "Email Address is required",
+									pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+								})}/>
+							<small id="emailHelp" className="form-text text-muted">We'll send you the password reset link to your email.</small>
+							{errors.email && errors.email.type === "required" && <p className="text-main-color">Please enter email</p>}
+							{errors.email && errors.email.type === "pattern" && <p className="text-main-color">Please enter valid email</p> }
+						</div>
+						<button type="submit" className="btn btn-md btn-primary full-width" disabled={!isValid}>Send Reset Link</button>
+					</form>
+				</div>
 			</div>
 		</div>
-	</div>
     )
 }
 

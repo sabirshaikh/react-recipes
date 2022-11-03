@@ -1,14 +1,14 @@
-import {useEffect, useCallback, useState } from "react"
+import {useEffect, useCallback, useState, Fragment } from "react"
 import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
 import Swal from 'sweetalert2';
+import { Helmet } from "react-helmet";
 import { useSelector, useDispatch } from "react-redux";
 import {layoutActions, authActions } from "../Store";
 const MyRecipeDetails = () => {
     const dispatch = useDispatch();
     const params = useParams();
     const [recipeData, setRecipeData] = useState(null);
-    const recipeCategory = useSelector(state => state.recipeReducer.recipeCategory)
     const history = useHistory();
     const userId = useSelector(state => state.authReducer.userInfo?.userId);
 
@@ -108,80 +108,85 @@ const MyRecipeDetails = () => {
     });
 
     return (
-        <div className="container">
-            <div className="row">
-                <div className="col-lg-8">
-                    {recipeData && <button onClick={deleteHandler} className="btn btn-sm border-1 btn-danger text-white box-shadow">Delete Recipe</button>}
-                    {recipeData &&
-                    <div className="margin-bottom-40px card border-0 box-shadow">
-                        <div className="card-img-top"><img src={`/img/cat-2.jpg`} alt="" target="_blank" className="w-100" /></div>
-                        <div className="padding-lr-30px padding-tb-20px">
-                            <h5 className="margin-bottom-20px margin-top-10px"><a className="text-dark" href="#">{recipeData.recipeTitle}</a></h5>
-                            <div className="rating">
+        <Fragment>
+            <Helmet>
+				<title>Cook Note - {recipeData ? recipeData.recipeTitle: ''} Food Recipes</title>
+			</Helmet>
+            <div className="container">
+                <div className="row">
+                    <div className="col-lg-8">
+                        {recipeData && <button onClick={deleteHandler} className="btn btn-sm border-1 btn-danger text-white box-shadow">Delete Recipe</button>}
+                        {recipeData &&
+                        <div className="margin-bottom-40px card border-0 box-shadow">
+                            <div className="card-img-top"><img src={`/img/cat-2.jpg`} alt="" target="_blank" className="w-100" /></div>
+                            <div className="padding-lr-30px padding-tb-20px">
+                                <h5 className="margin-bottom-20px margin-top-10px"><a className="text-dark" href="#">{recipeData.recipeTitle}</a></h5>
+                                <div className="rating">
+                                    <ul>
+                                        <li className="active"></li>
+                                        <li className="active"></li>
+                                        <li className="active"></li>
+                                        <li className="active"></li>
+                                        <li></li>
+                                    </ul>
+                                </div>
+                                <hr />
+                                <h3>Cuisine Type</h3>
                                 <ul>
-                                    <li className="active"></li>
-                                    <li className="active"></li>
-                                    <li className="active"></li>
-                                    <li className="active"></li>
-                                    <li></li>
+                                    <li>{(recipeData.recipeCuisine)}</li>
                                 </ul>
+                                <hr/>
+                                <h3>Meal Type</h3>
+                                <ul>
+                                    <li>{(recipeData.recipeMeal)}</li>
+                                </ul>
+                                <hr/>
+                                <h3>Diet Type</h3>
+                                <ul>
+                                    <li>{(recipeData.recipeDiet)}</li>
+                                </ul>
+                                <hr/>
+                                <h3>Ingredients</h3>
+                                <ul>
+                                    {ingredientList}
+                                </ul>
+                                <h3>Method</h3>
+                                <ol>
+                                    <br/>
+                                {stepList}
+                                </ol>
+                                <hr />
+                                <h3>Total Weight</h3>
+                                <ul>
+                                    <li>{Math.ceil(recipeData.recipeWeight)} (g)</li>
+                                </ul>
+                                <hr />
+                                <h3>Total Calories</h3>
+                                <ul>
+                                    <li>{Math.ceil(recipeData.recipeCalories)} (Kcal)</li>
+                                </ul>
+                                <hr/>
+                                <h3>Total Nutrients</h3>
+                                <ol>
+                                    {nutrientsList}
+                                </ol>
+                                <div className="row no-gutters">
+                                    <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
+                                    <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> {recipeData.recipeServings} servings</a></div>
+                                </div>
                             </div>
-                            <hr />
-                            <h3>Cuisine Type</h3>
-                            <ul>
-                                <li>{(recipeData.recipeCuisine)}</li>
-                            </ul>
-                            <hr/>
-                            <h3>Meal Type</h3>
-                            <ul>
-                                <li>{(recipeData.recipeMeal)}</li>
-                            </ul>
-                            <hr/>
-                            <h3>Diet Type</h3>
-                            <ul>
-                                <li>{(recipeData.recipeDiet)}</li>
-                            </ul>
-                            <hr/>
-                            <h3>Ingredients</h3>
-                            <ul>
-                                {ingredientList}
-                            </ul>
-                            <h3>Method</h3>
-                            <ol>
-                                <br/>
-                               {stepList}
-                            </ol>
-                            <hr />
-                            <h3>Total Weight</h3>
-                            <ul>
-                                <li>{Math.ceil(recipeData.recipeWeight)} (g)</li>
-                            </ul>
-                            <hr />
-                            <h3>Total Calories</h3>
-                            <ul>
-                                <li>{Math.ceil(recipeData.recipeCalories)} (Kcal)</li>
-                            </ul>
-                            <hr/>
-                            <h3>Total Nutrients</h3>
-                            <ol>
-                                {nutrientsList}
-                            </ol>
-                            <div className="row no-gutters">
-                                <div className="col-4 text-left"><a href="#" className="text-red"><i className="far fa-heart"></i> Save</a></div>
-                                <div className="col-8 text-right"><a href="#" className="text-grey-2"><i className="fas fa-users"></i> {recipeData.recipeServings} servings</a></div>
+                            <div className="background-light-grey border-top-1 border-grey padding-lr-30px padding-tb-20px">
+                                <a href="#" className="d-inline-block text-grey-3 h6 margin-bottom-0px margin-right-15px"><img src="/img/zoal-8.jpg" className="height-30px border-radius-30 margin-right-15px" alt="" /> Salim Aldos/ ery</a>
                             </div>
                         </div>
-                        <div className="background-light-grey border-top-1 border-grey padding-lr-30px padding-tb-20px">
-                            <a href="#" className="d-inline-block text-grey-3 h6 margin-bottom-0px margin-right-15px"><img src="/img/zoal-8.jpg" className="height-30px border-radius-30 margin-right-15px" alt="" /> Salim Aldos/ ery</a>
-                        </div>
+                        }
+                        {
+                            !recipeData && <p>Recipe not found</p>
+                        }
                     </div>
-                    }
-                    {
-                        !recipeData && <p>Recipe not found</p>
-                    }
                 </div>
             </div>
-        </div>
+        </Fragment>
     )
 }
 

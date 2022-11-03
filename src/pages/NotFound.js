@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import {useDispatch } from "react-redux";
+import { Helmet } from "react-helmet";
 import {layoutActions } from "../Store";
 
 const NotFound = () => {
@@ -11,6 +12,9 @@ const NotFound = () => {
     }, [])
     return (
         <div className="container margin-bottom-100px">
+            <Helmet>
+				<title>404 - Page not found</title>
+			</Helmet>
             <div className="text-center">
                 <img src="/img/404.png" alt="" />
                 <h3 className="text-center">Page Not Found</h3>

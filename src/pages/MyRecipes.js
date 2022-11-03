@@ -1,19 +1,16 @@
 import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Prompt, useHistory } from "react-router-dom";
-import { useForm, useFieldArray } from "react-hook-form";
 import axios from "axios";
-import { layoutActions, authActions } from "../Store";
 import Swal from "sweetalert2";
+import { Helmet } from "react-helmet";
+import { layoutActions, authActions } from "../Store";
 import RecipeCard2 from "../components/RecipeCard/RecipeCard2";
 
 const MyRecipes = () => {
     const dispatch = useDispatch();
-    const history = useHistory();
     const userId = useSelector(state => state.authReducer.userInfo?.userId);
     const [myRecipes, setMyRecipes] = useState([]);
-   
-    
+
     if(!userId) {
        dispatch(authActions.logout());
     }
@@ -61,6 +58,9 @@ const MyRecipes = () => {
 
     return (
         <div className="container">
+            <Helmet>
+				<title>Cook Note - Food Recipes</title>
+			</Helmet>
             <div className="recipes-masonry">
             {!myRecipes && <p>Recipes not found</p>}
                 {

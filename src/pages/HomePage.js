@@ -2,6 +2,7 @@ import { Fragment, useEffect, useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import axios from "axios";
+import { Helmet } from "react-helmet";
 import { layoutActions, recipeActions } from "../Store";
 import RecipeCard2 from "../components/RecipeCard/RecipeCard2";
 import CategoryCard from "../components/RecipeCategoryCard/CategoryCard";
@@ -73,6 +74,9 @@ const HomePage = () => {
   })
   return (
     <Fragment>
+      <Helmet>
+        <title>Cook Note - Food Recipes</title>
+      </Helmet>
       <div className="pull-top-85px">
         <div className="container">
           <div className="row">

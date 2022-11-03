@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { layoutActions, recipeActions } from "../Store";
 import RecipeCard1 from "../components/RecipeCard/RecipeCard1";
 import axios from "axios";
+import { Helmet } from "react-helmet";
 import InputControl from "../components/UI/InputControl";
 import useInput from "../Hooks/useInput";
 const Category = () => {
@@ -119,6 +120,9 @@ const Category = () => {
 
     return (
         <Fragment>
+            <Helmet>
+				<title>Cook Note - {categoryName} Food Recipes</title>
+			</Helmet>
             <div className="container">
                 <div className="margin-bottom-60px">
                     <div className="listing-search box-shadow">
