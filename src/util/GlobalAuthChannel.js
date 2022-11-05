@@ -1,2 +1,2 @@
 import { BroadcastChannel } from "broadcast-channel";
-export const BroadcastChannel = new BroadcastChannel('auth');
+export const authChannel = new BroadcastChannel('auth');

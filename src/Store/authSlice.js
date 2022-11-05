@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { layoutActions } from '.';
 import Swal from 'sweetalert2';
-import { BroadcastChannel } from '../util/GlobalAuthChannel';
+import { authChannel } from '../util/GlobalAuthChannel';
 const initialState = {
     isAuthenticated: false,
     userInfo: null,
@@ -18,14 +18,14 @@ const authSlice = createSlice({
             state.userToken = action.payload.token;
             state.userInfo = action.payload.userInfo;
             state.userId = action.payload.userId;
-            BroadcastChannel.postMessage("login");
+            authChannel.postMessage("login");
         },
         logout(state) {
             state.isAuthenticated = !!state.token;
             state.userInfo = null;
             state.userToken = null;
             state.userId = null;
-            BroadcastChannel.postMessage("logout");
+            authChannel.postMessage("logout");
 
             Swal.fire({
                 icon: 'success',

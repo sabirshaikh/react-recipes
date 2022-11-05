@@ -5,17 +5,17 @@ import {useSelector, useDispatch} from 'react-redux';
 // import { authActions } from "./Store";
 import { layoutActions } from "./Store";
 import checkRequests from "./util/AxiosGlobal";
-import { BroadcastChannel } from "./util/GlobalAuthChannel";
+import { authChannel } from "./util/GlobalAuthChannel";
 function App() {
   const showLoader = useSelector(state => state.layoutReducer.showLoader);
   const dispatch = useDispatch();
   
   useEffect(() => {
     dispatch(layoutActions.showLoader(false));
-    BroadcastChannel.onmessage = (msg) => {
-      window.location.reload(); 
+    authChannel.onmessage = (msg) => {
+      window.location.reload();
     }
-  }, []);
+  }, [authChannel]);
 
   return (
     <Fragment>
