@@ -109,6 +109,7 @@ const Category = () => {
 
     const searchHandler = (e) => {
         e.preventDefault();
+        searchControlRef.current.blur();
         if(!formIsValid) {
             console.log("form is invalidated")
             return;
