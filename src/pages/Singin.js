@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { useForm } from "react-hook-form";
 import { Helmet } from "react-helmet";
 import InputControl from "../components/UI/InputControl";
+import { setLogoutTimer } from "../Store/authSlice";
 const Signin = () => {
 	const isAuthenticated = useSelector(state => state.authReducer.isAuthenticated);
 	const history = useHistory();
@@ -23,6 +24,7 @@ const Signin = () => {
 		dispatch(layoutActions.setHeaderAlignment('text-center'));
 	}, [])
 
+	
     useEffect(() => {
 		if (isAuthenticated) {
 			history.push("/");
@@ -39,7 +41,7 @@ const Signin = () => {
 				body: JSON.stringify({
 					email: data.email,
 					password: data.password,
-					returnSecureToken: false
+					returnSecureToken: true
 				}),
 				headers: {
 				'Content-Type': 'application/json'
@@ -61,12 +63,16 @@ const Signin = () => {
 				})
 				dispatch(authActions.login({
 					token: responseData.idToken,
+					expiresIn: responseData.expiresIn,
 					userInfo: {
 						email: responseData.email,
-						userId: responseData.localId,
-						expiresIn: responseData.expiresIn
+						userId: responseData.localId
 					}
 				}));
+				const expirationTime = new Date(
+					new Date().getTime() + +responseData.expiresIn * 1000
+				);
+				dispatch(setLogoutTimer(expirationTime.toLocaleString()))
 			//   const expireTime = new Date(new Date().getTime() + (10 * 1000))
 			//   authCtx.login(responseData.idToken, expireTime.toISOString() );
 			//   authCtx.userData(responseData);
@@ -109,7 +115,7 @@ const Signin = () => {
 		});
 	}
 
-    return (
+	return (
 		<div className="container margin-bottom-100px">
 			<Helmet>
 				<title>Sign In | Cook Note - Food Recipes</title>
