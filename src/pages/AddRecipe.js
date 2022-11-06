@@ -9,6 +9,7 @@ import Swal from "sweetalert2";
 const AddRecipe = () => {
 	const dispatch = useDispatch();
     const userId = useSelector(state => state.authReducer.userInfo?.userId);
+    console.log("userId:", userId)
     useEffect(() => {
         dispatch(layoutActions.setTitle('Add Recipe'));
         dispatch(layoutActions.setHeaderAlignment('text-left'));
@@ -26,22 +27,6 @@ const AddRecipe = () => {
         }
 	});
 
-    useEffect(() => {
-        const handler = (event) => {
-          event.preventDefault();
-          event.returnValue = "";
-        };
-        if (isDirty) {
-          window.addEventListener("beforeunload", handler);
-          return () => {
-            window.removeEventListener("beforeunload", handler);
-          };
-        }
-        // since this is not dirty, don't do anything
-        return () => {};
-      }, [isDirty]);
-
-    
     const { fields: ingredientList, append: appendIngredients, remove: removeIngredients } = useFieldArray({
         control,
         name: "ingredient"
@@ -222,10 +207,7 @@ const AddRecipe = () => {
 				<title>Cook Note - Add recipe</title>
 			</Helmet>
             <form onSubmit={handleSubmit(addRecipeHandler)}>
-                <Prompt
-                    when={isDirty}
-                    message={`Changes you made may not be saved.`}
-                />
+                {userId && <Prompt when={isDirty} message={`Changes you made may not be saved.`}/>}
                 <div className="margin-tb-45px full-width">
                     <h4 className="padding-lr-30px padding-tb-20px background-white box-shadow border-radius-10"><i className="far fa-list-alt margin-right-10px text-main-color"></i>Basic Informations</h4>
                     <div className="padding-30px padding-bottom-30px background-white border-radius-10">
