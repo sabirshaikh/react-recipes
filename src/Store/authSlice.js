@@ -104,6 +104,8 @@ export const checkLogoutTimer = () => {
                 logoutTimer = setTimeout(() => {
                     dispatch(authActions.logout())
                 }, remainingTime);
+            } else {
+                dispatch(authActions.logout())
             }
     }
 }
