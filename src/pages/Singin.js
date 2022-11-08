@@ -72,7 +72,7 @@ const Signin = () => {
 				const expirationTime = new Date(
 					new Date().getTime() + +responseData.expiresIn * 1000
 				);
-				dispatch(setLogoutTimer(expirationTime.toLocaleString()))
+				dispatch(setLogoutTimer(expirationTime.toISOString()))
 			//   const expireTime = new Date(new Date().getTime() + (10 * 1000))
 			//   authCtx.login(responseData.idToken, expireTime.toISOString() );
 			//   authCtx.userData(responseData);

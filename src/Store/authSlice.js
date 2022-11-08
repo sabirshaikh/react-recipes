@@ -44,9 +44,9 @@ const authSlice = createSlice({
 
             Swal.fire({
                 icon: 'success',
-                title: 'Logout',
-                text: 'Logout Successfully',
-                timer: 2000
+                title: 'Session',
+                text: 'Session expired',
+                timer: 1500
             })
         },
 
